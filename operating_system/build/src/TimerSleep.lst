@@ -1,0 +1,861 @@
+GAS LISTING /tmp/ccOZLza0.s 			page 1
+
+
+   1              		.file	"TimerSleep.cpp"
+   2              		.option pic
+   3              		.option norelax
+   4              		.text
+   5              	.Ltext0:
+   6              		.align	2
+   7              		.globl	_ZN10TimerSleep3putEP3TCBm
+   9              	_ZN10TimerSleep3putEP3TCBm:
+  10              	.LFB35:
+  11              		.file 1 "src/TimerSleep.cpp"
+   1:src/TimerSleep.cpp **** //
+   2:src/TimerSleep.cpp **** // Created by os on 7/23/23.
+   3:src/TimerSleep.cpp **** //
+   4:src/TimerSleep.cpp **** #include "../h/TimerSleep.h"
+   5:src/TimerSleep.cpp **** 
+   6:src/TimerSleep.cpp **** TimerSleep::Node* TimerSleep::head = nullptr;
+   7:src/TimerSleep.cpp **** 
+   8:src/TimerSleep.cpp **** void TimerSleep::put(TCB *data, uint64 time) {
+  12              		.loc 1 8 46
+  13              		.cfi_startproc
+  14              	.LVL0:
+  15 0000 130101FE 		addi	sp,sp,-32
+  16              		.cfi_def_cfa_offset 32
+  17 0004 233C1100 		sd	ra,24(sp)
+  18 0008 23388100 		sd	s0,16(sp)
+  19 000c 23349100 		sd	s1,8(sp)
+  20 0010 23302101 		sd	s2,0(sp)
+  21              		.cfi_offset 1, -8
+  22              		.cfi_offset 8, -16
+  23              		.cfi_offset 9, -24
+  24              		.cfi_offset 18, -32
+  25 0014 13040102 		addi	s0,sp,32
+  26              		.cfi_def_cfa 8, 0
+  27 0018 13090500 		mv	s2,a0
+  28 001c 93840500 		mv	s1,a1
+   9:src/TimerSleep.cpp ****     Node *newNode = (Node*) MemoryAllocator::mem_alloc(sizeof(Node));
+  29              		.loc 1 9 5
+  30              		.loc 1 9 55 is_stmt 0
+  31 0020 13058001 		li	a0,24
+  32              	.LVL1:
+  33 0024 97000000 		call	_ZN15MemoryAllocator9mem_allocEm@plt
+  33      E7800000 
+  34              	.LVL2:
+  10:src/TimerSleep.cpp ****     newNode->data = data;
+  35              		.loc 1 10 5 is_stmt 1
+  36              		.loc 1 10 19 is_stmt 0
+  37 002c 23302501 		sd	s2,0(a0)
+  11:src/TimerSleep.cpp ****     newNode->next = nullptr;
+  38              		.loc 1 11 5 is_stmt 1
+  39              		.loc 1 11 19 is_stmt 0
+  40 0030 23340500 		sd	zero,8(a0)
+  12:src/TimerSleep.cpp **** 
+  13:src/TimerSleep.cpp ****     if(!head) {
+  41              		.loc 1 13 5 is_stmt 1
+  42              	.LBB5:
+  43              		.loc 1 13 8 is_stmt 0
+  44 0034 97070000 		ld	a5,.LANCHOR0
+GAS LISTING /tmp/ccOZLza0.s 			page 2
+
+
+  44      83B70700 
+  45              		.loc 1 13 5
+  46 003c 63860700 		beqz	a5,.L10
+  47              	.LBB6:
+  14:src/TimerSleep.cpp ****         head = newNode;
+  15:src/TimerSleep.cpp ****         newNode->time = time;
+  16:src/TimerSleep.cpp ****     }
+  17:src/TimerSleep.cpp ****     else{
+  18:src/TimerSleep.cpp ****         Node* prev = nullptr, *cur = head;
+  48              		.loc 1 18 15
+  49 0040 93060000 		li	a3,0
+  50 0044 6F00C002 		j	.L2
+  51              	.L10:
+  52              	.LBE6:
+  14:src/TimerSleep.cpp ****         head = newNode;
+  53              		.loc 1 14 9 is_stmt 1
+  14:src/TimerSleep.cpp ****         head = newNode;
+  54              		.loc 1 14 14 is_stmt 0
+  55 0048 97070000 		sd	a0,.LANCHOR0,a5
+  55      23B0A700 
+  15:src/TimerSleep.cpp ****     }
+  56              		.loc 1 15 9 is_stmt 1
+  15:src/TimerSleep.cpp ****     }
+  57              		.loc 1 15 23 is_stmt 0
+  58 0050 23389500 		sd	s1,16(a0)
+  59 0054 6F000005 		j	.L1
+  60              	.LVL3:
+  61              	.L11:
+  62              	.LBB7:
+  19:src/TimerSleep.cpp ****         while(cur != nullptr){
+  20:src/TimerSleep.cpp ****             if(time <= cur->time){
+  21:src/TimerSleep.cpp ****                 newNode->time = time;
+  22:src/TimerSleep.cpp ****                 newNode->next = cur;
+  23:src/TimerSleep.cpp ****                 cur->time -= time;
+  24:src/TimerSleep.cpp ****                 if(!prev)
+  25:src/TimerSleep.cpp ****                     head = newNode;
+  63              		.loc 1 25 21 is_stmt 1
+  64              		.loc 1 25 26 is_stmt 0
+  65 0058 97070000 		sd	a0,.LANCHOR0,a5
+  65      23B0A700 
+  66              	.LVL4:
+  67 0060 6F004004 		j	.L1
+  68              	.LVL5:
+  69              	.L5:
+  26:src/TimerSleep.cpp ****                 else
+  27:src/TimerSleep.cpp ****                     prev->next = newNode;
+  28:src/TimerSleep.cpp ****                 return;
+  29:src/TimerSleep.cpp ****             }
+  30:src/TimerSleep.cpp **** 
+  31:src/TimerSleep.cpp ****             time-=cur->time;
+  70              		.loc 1 31 13 is_stmt 1
+  71              		.loc 1 31 17 is_stmt 0
+  72 0064 B384E440 		sub	s1,s1,a4
+  73              	.LVL6:
+  32:src/TimerSleep.cpp ****             prev = cur;
+  74              		.loc 1 32 13 is_stmt 1
+  33:src/TimerSleep.cpp ****             cur = cur->next;
+GAS LISTING /tmp/ccOZLza0.s 			page 3
+
+
+  75              		.loc 1 33 13
+  32:src/TimerSleep.cpp ****             prev = cur;
+  76              		.loc 1 32 18 is_stmt 0
+  77 0068 93860700 		mv	a3,a5
+  78              		.loc 1 33 17
+  79 006c 83B78700 		ld	a5,8(a5)
+  80              	.LVL7:
+  81              	.L2:
+  19:src/TimerSleep.cpp ****             if(time <= cur->time){
+  82              		.loc 1 19 9 is_stmt 1
+  19:src/TimerSleep.cpp ****             if(time <= cur->time){
+  83              		.loc 1 19 19
+  84 0070 63860702 		beqz	a5,.L4
+  20:src/TimerSleep.cpp ****                 newNode->time = time;
+  85              		.loc 1 20 13
+  20:src/TimerSleep.cpp ****                 newNode->time = time;
+  86              		.loc 1 20 29 is_stmt 0
+  87 0074 03B70701 		ld	a4,16(a5)
+  20:src/TimerSleep.cpp ****                 newNode->time = time;
+  88              		.loc 1 20 13
+  89 0078 E36697FE 		bltu	a4,s1,.L5
+  21:src/TimerSleep.cpp ****                 newNode->next = cur;
+  90              		.loc 1 21 17 is_stmt 1
+  21:src/TimerSleep.cpp ****                 newNode->next = cur;
+  91              		.loc 1 21 31 is_stmt 0
+  92 007c 23389500 		sd	s1,16(a0)
+  22:src/TimerSleep.cpp ****                 cur->time -= time;
+  93              		.loc 1 22 17 is_stmt 1
+  22:src/TimerSleep.cpp ****                 cur->time -= time;
+  94              		.loc 1 22 31 is_stmt 0
+  95 0080 2334F500 		sd	a5,8(a0)
+  23:src/TimerSleep.cpp ****                 if(!prev)
+  96              		.loc 1 23 17 is_stmt 1
+  23:src/TimerSleep.cpp ****                 if(!prev)
+  97              		.loc 1 23 27 is_stmt 0
+  98 0084 03B70701 		ld	a4,16(a5)
+  99 0088 B3049740 		sub	s1,a4,s1
+ 100              	.LVL8:
+ 101 008c 23B89700 		sd	s1,16(a5)
+ 102              	.LVL9:
+  24:src/TimerSleep.cpp ****                     head = newNode;
+ 103              		.loc 1 24 17 is_stmt 1
+ 104 0090 E38406FC 		beqz	a3,.L11
+  27:src/TimerSleep.cpp ****                 return;
+ 105              		.loc 1 27 21
+  27:src/TimerSleep.cpp ****                 return;
+ 106              		.loc 1 27 32 is_stmt 0
+ 107 0094 23B4A600 		sd	a0,8(a3)
+  28:src/TimerSleep.cpp ****             }
+ 108              		.loc 1 28 17 is_stmt 1
+ 109 0098 6F00C000 		j	.L1
+ 110              	.LVL10:
+ 111              	.L4:
+  34:src/TimerSleep.cpp ****         }
+  35:src/TimerSleep.cpp **** 
+  36:src/TimerSleep.cpp ****         newNode->time = time;
+ 112              		.loc 1 36 9
+GAS LISTING /tmp/ccOZLza0.s 			page 4
+
+
+ 113              		.loc 1 36 23 is_stmt 0
+ 114 009c 23389500 		sd	s1,16(a0)
+  37:src/TimerSleep.cpp ****         prev->next = newNode;
+ 115              		.loc 1 37 9 is_stmt 1
+ 116              		.loc 1 37 20 is_stmt 0
+ 117 00a0 23B4A600 		sd	a0,8(a3)
+ 118              	.LVL11:
+ 119              	.L1:
+ 120              	.LBE7:
+ 121              	.LBE5:
+  38:src/TimerSleep.cpp ****     }
+  39:src/TimerSleep.cpp **** }
+ 122              		.loc 1 39 1
+ 123 00a4 83308101 		ld	ra,24(sp)
+ 124              		.cfi_restore 1
+ 125 00a8 03340101 		ld	s0,16(sp)
+ 126              		.cfi_restore 8
+ 127              		.cfi_def_cfa 2, 32
+ 128 00ac 83348100 		ld	s1,8(sp)
+ 129              		.cfi_restore 9
+ 130 00b0 03390100 		ld	s2,0(sp)
+ 131              		.cfi_restore 18
+ 132              	.LVL12:
+ 133 00b4 13010102 		addi	sp,sp,32
+ 134              		.cfi_def_cfa_offset 0
+ 135 00b8 67800000 		jr	ra
+ 136              		.cfi_endproc
+ 137              	.LFE35:
+ 139              		.align	2
+ 140              		.globl	_ZN10TimerSleep3getEv
+ 142              	_ZN10TimerSleep3getEv:
+ 143              	.LFB36:
+  40:src/TimerSleep.cpp **** 
+  41:src/TimerSleep.cpp **** void TimerSleep::get() {
+ 144              		.loc 1 41 24 is_stmt 1
+ 145              		.cfi_startproc
+  42:src/TimerSleep.cpp ****     if(!head) return;
+ 146              		.loc 1 42 5
+ 147              		.loc 1 42 8 is_stmt 0
+ 148 00bc 97070000 		ld	a5,.LANCHOR0
+ 148      83B70700 
+ 149              		.loc 1 42 5
+ 150 00c4 63820708 		beqz	a5,.L16
+  41:src/TimerSleep.cpp ****     if(!head) return;
+ 151              		.loc 1 41 24
+ 152 00c8 130101FE 		addi	sp,sp,-32
+ 153              		.cfi_def_cfa_offset 32
+ 154 00cc 233C1100 		sd	ra,24(sp)
+ 155 00d0 23388100 		sd	s0,16(sp)
+ 156 00d4 23349100 		sd	s1,8(sp)
+ 157              		.cfi_offset 1, -8
+ 158              		.cfi_offset 8, -16
+ 159              		.cfi_offset 9, -24
+ 160 00d8 13040102 		addi	s0,sp,32
+ 161              		.cfi_def_cfa 8, 0
+  43:src/TimerSleep.cpp **** 
+  44:src/TimerSleep.cpp ****     head->time--;
+GAS LISTING /tmp/ccOZLza0.s 			page 5
+
+
+ 162              		.loc 1 44 5 is_stmt 1
+ 163              		.loc 1 44 11 is_stmt 0
+ 164 00dc 03B70701 		ld	a4,16(a5)
+ 165              		.loc 1 44 15
+ 166 00e0 1307F7FF 		addi	a4,a4,-1
+ 167 00e4 23B8E700 		sd	a4,16(a5)
+ 168              	.L14:
+  45:src/TimerSleep.cpp ****     while(head != nullptr && head->time <= 0){
+ 169              		.loc 1 45 5 is_stmt 1
+ 170              		.loc 1 45 27
+ 171              		.loc 1 45 16 is_stmt 0
+ 172 00e8 97040000 		ld	s1,.LANCHOR0
+ 172      83B40400 
+ 173              		.loc 1 45 27
+ 174 00f0 63820404 		beqz	s1,.L12
+ 175              		.loc 1 45 36 discriminator 1
+ 176 00f4 83B70401 		ld	a5,16(s1)
+ 177              		.loc 1 45 27 discriminator 1
+ 178 00f8 639E0702 		bnez	a5,.L12
+ 179              	.LBB8:
+  46:src/TimerSleep.cpp ****         Node* prev = head;
+ 180              		.loc 1 46 9 is_stmt 1
+ 181              	.LVL13:
+  47:src/TimerSleep.cpp ****         TCB* data = head->data;
+ 182              		.loc 1 47 9
+ 183              		.loc 1 47 14 is_stmt 0
+ 184 00fc 03B50400 		ld	a0,0(s1)
+ 185              	.LVL14:
+  48:src/TimerSleep.cpp ****         data->setState(TCB::READY);
+ 186              		.loc 1 48 9 is_stmt 1
+ 187              	.LBB9:
+ 188              	.LBB10:
+ 189              		.file 2 "src/../h/TCB.h"
+   1:src/../h/TCB.h **** //
+   2:src/../h/TCB.h **** // Created by os on 7/17/23.
+   3:src/../h/TCB.h **** //
+   4:src/../h/TCB.h **** 
+   5:src/../h/TCB.h **** #ifndef PROJECT_BASE_TCB_H
+   6:src/../h/TCB.h **** #define PROJECT_BASE_TCB_H
+   7:src/../h/TCB.h **** 
+   8:src/../h/TCB.h **** #include "Scheduler.h"
+   9:src/../h/TCB.h **** #include "Riscv.h"
+  10:src/../h/TCB.h **** #include "Sem.h"
+  11:src/../h/TCB.h **** #include "syscall_c.hpp"
+  12:src/../h/TCB.h **** 
+  13:src/../h/TCB.h **** class Sem;
+  14:src/../h/TCB.h **** 
+  15:src/../h/TCB.h **** class TCB {
+  16:src/../h/TCB.h **** public:
+  17:src/../h/TCB.h ****     using Body = void (*)(void*);
+  18:src/../h/TCB.h ****     enum STATE{FINISHED, READY, BLOCKED, SLEEPING, IDLE};
+  19:src/../h/TCB.h **** 
+  20:src/../h/TCB.h ****     ~TCB(){
+  21:src/../h/TCB.h ****         running->stack -= (DEFAULT_STACK_SIZE - 1);
+  22:src/../h/TCB.h ****         MemoryAllocator::mem_free(running->stack);
+  23:src/../h/TCB.h ****         //mozda bi trebao syscall
+  24:src/../h/TCB.h ****     }
+GAS LISTING /tmp/ccOZLza0.s 			page 6
+
+
+  25:src/../h/TCB.h **** 
+  26:src/../h/TCB.h ****     void *operator new(size_t size);
+  27:src/../h/TCB.h ****     void operator delete(void *ptr);
+  28:src/../h/TCB.h **** 
+  29:src/../h/TCB.h **** private:
+  30:src/../h/TCB.h ****     TCB(Body body, uint64* stack, void* arg, uint64 timeSlice) :
+  31:src/../h/TCB.h ****         body(body),
+  32:src/../h/TCB.h ****         stack(stack),
+  33:src/../h/TCB.h ****         context({(uint64) threadWrapper,
+  34:src/../h/TCB.h ****                  (uint64) stack
+  35:src/../h/TCB.h ****                 }),
+  36:src/../h/TCB.h ****         arg(arg),
+  37:src/../h/TCB.h ****         timeSlice(timeSlice),
+  38:src/../h/TCB.h ****         restimeSlice(timeSlice),
+  39:src/../h/TCB.h ****         state(READY)
+  40:src/../h/TCB.h ****     {
+  41:src/../h/TCB.h ****         head = nullptr;
+  42:src/../h/TCB.h ****         retFromClosedSem = false;
+  43:src/../h/TCB.h ****     }
+  44:src/../h/TCB.h **** 
+  45:src/../h/TCB.h ****     struct Context
+  46:src/../h/TCB.h ****     {
+  47:src/../h/TCB.h ****         uint64 ra;
+  48:src/../h/TCB.h ****         uint64 sp;
+  49:src/../h/TCB.h ****     };
+  50:src/../h/TCB.h **** 
+  51:src/../h/TCB.h ****     struct Node{
+  52:src/../h/TCB.h ****         Sem* data;
+  53:src/../h/TCB.h ****         Node* next;
+  54:src/../h/TCB.h **** 
+  55:src/../h/TCB.h ****         void *operator new(size_t size);
+  56:src/../h/TCB.h ****         void operator delete(void *ptr);
+  57:src/../h/TCB.h ****     };
+  58:src/../h/TCB.h **** 
+  59:src/../h/TCB.h ****     void pushJoinSem(Sem* data);
+  60:src/../h/TCB.h ****     void notifayAllJoinSem();
+  61:src/../h/TCB.h ****     void join(TCB* thread);
+  62:src/../h/TCB.h **** 
+  63:src/../h/TCB.h ****     static TCB *running;
+  64:src/../h/TCB.h **** 
+  65:src/../h/TCB.h ****     Body body;
+  66:src/../h/TCB.h ****     uint64 *stack;
+  67:src/../h/TCB.h ****     Context context;
+  68:src/../h/TCB.h ****     void* arg;
+  69:src/../h/TCB.h ****     uint64 timeSlice;
+  70:src/../h/TCB.h ****     uint64 restimeSlice;
+  71:src/../h/TCB.h ****     STATE state;
+  72:src/../h/TCB.h ****     Node * head;
+  73:src/../h/TCB.h ****     bool retFromClosedSem;
+  74:src/../h/TCB.h **** 
+  75:src/../h/TCB.h ****     bool isFinished() const { return state == STATE::FINISHED; }
+  76:src/../h/TCB.h ****     void setState(STATE value) { state = value; }
+ 190              		.loc 2 76 34
+ 191              		.loc 2 76 40 is_stmt 0
+ 192 0100 93071000 		li	a5,1
+ 193 0104 232CF502 		sw	a5,56(a0)
+ 194              	.LVL15:
+GAS LISTING /tmp/ccOZLza0.s 			page 7
+
+
+ 195              	.LBE10:
+ 196              	.LBE9:
+  49:src/TimerSleep.cpp ****         Scheduler::put(data);
+ 197              		.loc 1 49 9 is_stmt 1
+ 198              		.loc 1 49 23 is_stmt 0
+ 199 0108 97000000 		call	_ZN9Scheduler3putEP3TCB@plt
+ 199      E7800000 
+ 200              	.LVL16:
+  50:src/TimerSleep.cpp **** 
+  51:src/TimerSleep.cpp ****         head = head->next;
+ 201              		.loc 1 51 9 is_stmt 1
+ 202              		.loc 1 51 22 is_stmt 0
+ 203 0110 97070000 		lla	a5,.LANCHOR0
+ 203      93870700 
+ 204 0118 03B70700 		ld	a4,0(a5)
+ 205 011c 03378700 		ld	a4,8(a4)
+ 206              		.loc 1 51 14
+ 207 0120 23B0E700 		sd	a4,0(a5)
+  52:src/TimerSleep.cpp ****         MemoryAllocator::mem_free(prev);
+ 208              		.loc 1 52 9 is_stmt 1
+ 209              		.loc 1 52 34 is_stmt 0
+ 210 0124 13850400 		mv	a0,s1
+ 211 0128 97000000 		call	_ZN15MemoryAllocator8mem_freeEPv@plt
+ 211      E7800000 
+ 212              	.LVL17:
+ 213              	.LBE8:
+  45:src/TimerSleep.cpp ****         Node* prev = head;
+ 214              		.loc 1 45 5
+ 215 0130 6FF09FFB 		j	.L14
+ 216              	.LVL18:
+ 217              	.L12:
+  53:src/TimerSleep.cpp ****     }
+  54:src/TimerSleep.cpp **** }
+ 218              		.loc 1 54 1
+ 219 0134 83308101 		ld	ra,24(sp)
+ 220              		.cfi_restore 1
+ 221 0138 03340101 		ld	s0,16(sp)
+ 222              		.cfi_restore 8
+ 223              		.cfi_def_cfa 2, 32
+ 224 013c 83348100 		ld	s1,8(sp)
+ 225              		.cfi_restore 9
+ 226 0140 13010102 		addi	sp,sp,32
+ 227              		.cfi_def_cfa_offset 0
+ 228 0144 67800000 		jr	ra
+ 229              	.L16:
+ 230 0148 67800000 		ret
+ 231              		.cfi_endproc
+ 232              	.LFE36:
+ 234              		.align	2
+ 235              		.globl	_ZN10TimerSleep4NodenwEm
+ 237              	_ZN10TimerSleep4NodenwEm:
+ 238              	.LFB37:
+  55:src/TimerSleep.cpp **** 
+  56:src/TimerSleep.cpp **** void *TimerSleep::Node::operator new(size_t size) {
+ 239              		.loc 1 56 51 is_stmt 1
+ 240              		.cfi_startproc
+ 241              	.LVL19:
+GAS LISTING /tmp/ccOZLza0.s 			page 8
+
+
+ 242 014c 130101FF 		addi	sp,sp,-16
+ 243              		.cfi_def_cfa_offset 16
+ 244 0150 23341100 		sd	ra,8(sp)
+ 245 0154 23308100 		sd	s0,0(sp)
+ 246              		.cfi_offset 1, -8
+ 247              		.cfi_offset 8, -16
+ 248 0158 13040101 		addi	s0,sp,16
+ 249              		.cfi_def_cfa 8, 0
+  57:src/TimerSleep.cpp ****     return MemoryAllocator::mem_alloc(size);
+ 250              		.loc 1 57 5
+ 251              		.loc 1 57 38 is_stmt 0
+ 252 015c 97000000 		call	_ZN15MemoryAllocator9mem_allocEm@plt
+ 252      E7800000 
+ 253              	.LVL20:
+  58:src/TimerSleep.cpp **** }
+ 254              		.loc 1 58 1
+ 255 0164 83308100 		ld	ra,8(sp)
+ 256              		.cfi_restore 1
+ 257 0168 03340100 		ld	s0,0(sp)
+ 258              		.cfi_restore 8
+ 259              		.cfi_def_cfa 2, 16
+ 260 016c 13010101 		addi	sp,sp,16
+ 261              		.cfi_def_cfa_offset 0
+ 262 0170 67800000 		jr	ra
+ 263              		.cfi_endproc
+ 264              	.LFE37:
+ 266              		.align	2
+ 267              		.globl	_ZN10TimerSleep4NodedlEPv
+ 269              	_ZN10TimerSleep4NodedlEPv:
+ 270              	.LFB38:
+  59:src/TimerSleep.cpp **** 
+  60:src/TimerSleep.cpp **** void TimerSleep::Node::operator delete(void *ptr) {
+ 271              		.loc 1 60 51 is_stmt 1
+ 272              		.cfi_startproc
+ 273              	.LVL21:
+ 274 0174 130101FF 		addi	sp,sp,-16
+ 275              		.cfi_def_cfa_offset 16
+ 276 0178 23341100 		sd	ra,8(sp)
+ 277 017c 23308100 		sd	s0,0(sp)
+ 278              		.cfi_offset 1, -8
+ 279              		.cfi_offset 8, -16
+ 280 0180 13040101 		addi	s0,sp,16
+ 281              		.cfi_def_cfa 8, 0
+  61:src/TimerSleep.cpp ****     MemoryAllocator::mem_free(ptr);
+ 282              		.loc 1 61 5
+ 283              		.loc 1 61 30 is_stmt 0
+ 284 0184 97000000 		call	_ZN15MemoryAllocator8mem_freeEPv@plt
+ 284      E7800000 
+ 285              	.LVL22:
+  62:src/TimerSleep.cpp **** }...
+ 286              		.loc 1 62 1
+ 287 018c 83308100 		ld	ra,8(sp)
+ 288              		.cfi_restore 1
+ 289 0190 03340100 		ld	s0,0(sp)
+ 290              		.cfi_restore 8
+ 291              		.cfi_def_cfa 2, 16
+ 292 0194 13010101 		addi	sp,sp,16
+GAS LISTING /tmp/ccOZLza0.s 			page 9
+
+
+ 293              		.cfi_def_cfa_offset 0
+ 294 0198 67800000 		jr	ra
+ 295              		.cfi_endproc
+ 296              	.LFE38:
+ 298              		.globl	_ZN10TimerSleep4headE
+ 299              		.bss
+ 300              		.align	3
+ 301              		.set	.LANCHOR0,. + 0
+ 304              	_ZN10TimerSleep4headE:
+ 305 0000 00000000 		.zero	8
+ 305      00000000 
+ 306              		.text
+ 307              	.Letext0:
+ 308              		.file 3 "src/../h/../lib/hw.h"
+ 309              		.file 4 "src/../h/MemoryAllocator.h"
+ 310              		.file 5 "src/../h/Scheduler.h"
+ 311              		.file 6 "src/../h/Sem.h"
+ 312              		.file 7 "src/../h/TimerSleep.h"
+ 313              		.file 8 "src/../h/syscall_c.hpp"
+GAS LISTING /tmp/ccOZLza0.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 TimerSleep.cpp
+     /tmp/ccOZLza0.s:9      .text:0000000000000000 _ZN10TimerSleep3putEP3TCBm
+     /tmp/ccOZLza0.s:13     .text:0000000000000000 .L0 
+     /tmp/ccOZLza0.s:15     .text:0000000000000000 .L0 
+     /tmp/ccOZLza0.s:16     .text:0000000000000004 .L0 
+     /tmp/ccOZLza0.s:21     .text:0000000000000014 .L0 
+     /tmp/ccOZLza0.s:22     .text:0000000000000014 .L0 
+     /tmp/ccOZLza0.s:23     .text:0000000000000014 .L0 
+     /tmp/ccOZLza0.s:24     .text:0000000000000014 .L0 
+     /tmp/ccOZLza0.s:26     .text:0000000000000018 .L0 
+     /tmp/ccOZLza0.s:30     .text:0000000000000020 .L0 
+     /tmp/ccOZLza0.s:31     .text:0000000000000020 .L0 
+     /tmp/ccOZLza0.s:36     .text:000000000000002c .L0 
+     /tmp/ccOZLza0.s:37     .text:000000000000002c .L0 
+     /tmp/ccOZLza0.s:39     .text:0000000000000030 .L0 
+     /tmp/ccOZLza0.s:40     .text:0000000000000030 .L0 
+     /tmp/ccOZLza0.s:43     .text:0000000000000034 .L0 
+     /tmp/ccOZLza0.s:44     .text:0000000000000034 .L0 
+     /tmp/ccOZLza0.s:46     .text:000000000000003c .L0 
+     /tmp/ccOZLza0.s:49     .text:0000000000000040 .L0 
+     /tmp/ccOZLza0.s:54     .text:0000000000000048 .L0 
+     /tmp/ccOZLza0.s:55     .text:0000000000000048 .L0 
+     /tmp/ccOZLza0.s:57     .text:0000000000000050 .L0 
+     /tmp/ccOZLza0.s:58     .text:0000000000000050 .L0 
+     /tmp/ccOZLza0.s:64     .text:0000000000000058 .L0 
+     /tmp/ccOZLza0.s:65     .text:0000000000000058 .L0 
+     /tmp/ccOZLza0.s:71     .text:0000000000000064 .L0 
+     /tmp/ccOZLza0.s:72     .text:0000000000000064 .L0 
+     /tmp/ccOZLza0.s:75     .text:0000000000000068 .L0 
+     /tmp/ccOZLza0.s:76     .text:0000000000000068 .L0 
+     /tmp/ccOZLza0.s:77     .text:0000000000000068 .L0 
+     /tmp/ccOZLza0.s:79     .text:000000000000006c .L0 
+     /tmp/ccOZLza0.s:83     .text:0000000000000070 .L0 
+     /tmp/ccOZLza0.s:84     .text:0000000000000070 .L0 
+     /tmp/ccOZLza0.s:86     .text:0000000000000074 .L0 
+     /tmp/ccOZLza0.s:87     .text:0000000000000074 .L0 
+     /tmp/ccOZLza0.s:89     .text:0000000000000078 .L0 
+     /tmp/ccOZLza0.s:91     .text:000000000000007c .L0 
+     /tmp/ccOZLza0.s:92     .text:000000000000007c .L0 
+     /tmp/ccOZLza0.s:94     .text:0000000000000080 .L0 
+     /tmp/ccOZLza0.s:95     .text:0000000000000080 .L0 
+     /tmp/ccOZLza0.s:97     .text:0000000000000084 .L0 
+     /tmp/ccOZLza0.s:98     .text:0000000000000084 .L0 
+     /tmp/ccOZLza0.s:104    .text:0000000000000090 .L0 
+     /tmp/ccOZLza0.s:106    .text:0000000000000094 .L0 
+     /tmp/ccOZLza0.s:107    .text:0000000000000094 .L0 
+     /tmp/ccOZLza0.s:109    .text:0000000000000098 .L0 
+     /tmp/ccOZLza0.s:113    .text:000000000000009c .L0 
+     /tmp/ccOZLza0.s:114    .text:000000000000009c .L0 
+     /tmp/ccOZLza0.s:116    .text:00000000000000a0 .L0 
+     /tmp/ccOZLza0.s:117    .text:00000000000000a0 .L0 
+     /tmp/ccOZLza0.s:123    .text:00000000000000a4 .L0 
+     /tmp/ccOZLza0.s:124    .text:00000000000000a8 .L0 
+     /tmp/ccOZLza0.s:126    .text:00000000000000ac .L0 
+     /tmp/ccOZLza0.s:127    .text:00000000000000ac .L0 
+     /tmp/ccOZLza0.s:129    .text:00000000000000b0 .L0 
+GAS LISTING /tmp/ccOZLza0.s 			page 11
+
+
+     /tmp/ccOZLza0.s:131    .text:00000000000000b4 .L0 
+     /tmp/ccOZLza0.s:134    .text:00000000000000b8 .L0 
+     /tmp/ccOZLza0.s:136    .text:00000000000000bc .L0 
+     /tmp/ccOZLza0.s:142    .text:00000000000000bc _ZN10TimerSleep3getEv
+     /tmp/ccOZLza0.s:145    .text:00000000000000bc .L0 
+     /tmp/ccOZLza0.s:146    .text:00000000000000bc .L0 
+     /tmp/ccOZLza0.s:147    .text:00000000000000bc .L0 
+     /tmp/ccOZLza0.s:148    .text:00000000000000bc .L0 
+     /tmp/ccOZLza0.s:150    .text:00000000000000c4 .L0 
+     /tmp/ccOZLza0.s:152    .text:00000000000000c8 .L0 
+     /tmp/ccOZLza0.s:153    .text:00000000000000cc .L0 
+     /tmp/ccOZLza0.s:157    .text:00000000000000d8 .L0 
+     /tmp/ccOZLza0.s:158    .text:00000000000000d8 .L0 
+     /tmp/ccOZLza0.s:159    .text:00000000000000d8 .L0 
+     /tmp/ccOZLza0.s:161    .text:00000000000000dc .L0 
+     /tmp/ccOZLza0.s:163    .text:00000000000000dc .L0 
+     /tmp/ccOZLza0.s:164    .text:00000000000000dc .L0 
+     /tmp/ccOZLza0.s:166    .text:00000000000000e0 .L0 
+     /tmp/ccOZLza0.s:170    .text:00000000000000e8 .L0 
+     /tmp/ccOZLza0.s:171    .text:00000000000000e8 .L0 
+     /tmp/ccOZLza0.s:172    .text:00000000000000e8 .L0 
+     /tmp/ccOZLza0.s:174    .text:00000000000000f0 .L0 
+     /tmp/ccOZLza0.s:176    .text:00000000000000f4 .L0 
+     /tmp/ccOZLza0.s:178    .text:00000000000000f8 .L0 
+     /tmp/ccOZLza0.s:182    .text:00000000000000fc .L0 
+     /tmp/ccOZLza0.s:183    .text:00000000000000fc .L0 
+     /tmp/ccOZLza0.s:184    .text:00000000000000fc .L0 
+     /tmp/ccOZLza0.s:190    .text:0000000000000100 .L0 
+     /tmp/ccOZLza0.s:191    .text:0000000000000100 .L0 
+     /tmp/ccOZLza0.s:192    .text:0000000000000100 .L0 
+     /tmp/ccOZLza0.s:198    .text:0000000000000108 .L0 
+     /tmp/ccOZLza0.s:199    .text:0000000000000108 .L0 
+     /tmp/ccOZLza0.s:202    .text:0000000000000110 .L0 
+     /tmp/ccOZLza0.s:203    .text:0000000000000110 .L0 
+     /tmp/ccOZLza0.s:207    .text:0000000000000120 .L0 
+     /tmp/ccOZLza0.s:209    .text:0000000000000124 .L0 
+     /tmp/ccOZLza0.s:210    .text:0000000000000124 .L0 
+     /tmp/ccOZLza0.s:215    .text:0000000000000130 .L0 
+     /tmp/ccOZLza0.s:219    .text:0000000000000134 .L0 
+     /tmp/ccOZLza0.s:220    .text:0000000000000138 .L0 
+     /tmp/ccOZLza0.s:222    .text:000000000000013c .L0 
+     /tmp/ccOZLza0.s:223    .text:000000000000013c .L0 
+     /tmp/ccOZLza0.s:225    .text:0000000000000140 .L0 
+     /tmp/ccOZLza0.s:227    .text:0000000000000144 .L0 
+     /tmp/ccOZLza0.s:231    .text:000000000000014c .L0 
+     /tmp/ccOZLza0.s:237    .text:000000000000014c _ZN10TimerSleep4NodenwEm
+     /tmp/ccOZLza0.s:240    .text:000000000000014c .L0 
+     /tmp/ccOZLza0.s:242    .text:000000000000014c .L0 
+     /tmp/ccOZLza0.s:243    .text:0000000000000150 .L0 
+     /tmp/ccOZLza0.s:246    .text:0000000000000158 .L0 
+     /tmp/ccOZLza0.s:247    .text:0000000000000158 .L0 
+     /tmp/ccOZLza0.s:249    .text:000000000000015c .L0 
+     /tmp/ccOZLza0.s:251    .text:000000000000015c .L0 
+     /tmp/ccOZLza0.s:252    .text:000000000000015c .L0 
+     /tmp/ccOZLza0.s:255    .text:0000000000000164 .L0 
+     /tmp/ccOZLza0.s:256    .text:0000000000000168 .L0 
+     /tmp/ccOZLza0.s:258    .text:000000000000016c .L0 
+GAS LISTING /tmp/ccOZLza0.s 			page 12
+
+
+     /tmp/ccOZLza0.s:259    .text:000000000000016c .L0 
+     /tmp/ccOZLza0.s:261    .text:0000000000000170 .L0 
+     /tmp/ccOZLza0.s:263    .text:0000000000000174 .L0 
+     /tmp/ccOZLza0.s:269    .text:0000000000000174 _ZN10TimerSleep4NodedlEPv
+     /tmp/ccOZLza0.s:272    .text:0000000000000174 .L0 
+     /tmp/ccOZLza0.s:274    .text:0000000000000174 .L0 
+     /tmp/ccOZLza0.s:275    .text:0000000000000178 .L0 
+     /tmp/ccOZLza0.s:278    .text:0000000000000180 .L0 
+     /tmp/ccOZLza0.s:279    .text:0000000000000180 .L0 
+     /tmp/ccOZLza0.s:281    .text:0000000000000184 .L0 
+     /tmp/ccOZLza0.s:283    .text:0000000000000184 .L0 
+     /tmp/ccOZLza0.s:284    .text:0000000000000184 .L0 
+     /tmp/ccOZLza0.s:287    .text:000000000000018c .L0 
+     /tmp/ccOZLza0.s:288    .text:0000000000000190 .L0 
+     /tmp/ccOZLza0.s:290    .text:0000000000000194 .L0 
+     /tmp/ccOZLza0.s:291    .text:0000000000000194 .L0 
+     /tmp/ccOZLza0.s:293    .text:0000000000000198 .L0 
+     /tmp/ccOZLza0.s:295    .text:000000000000019c .L0 
+     /tmp/ccOZLza0.s:304    .bss:0000000000000000 _ZN10TimerSleep4headE
+     /tmp/ccOZLza0.s:301    .bss:0000000000000000 .LANCHOR0
+     /tmp/ccOZLza0.s:314    .text:000000000000019c .L0 
+     /tmp/ccOZLza0.s:44     .text:0000000000000034 .L0 
+     /tmp/ccOZLza0.s:55     .text:0000000000000048 .L0 
+     /tmp/ccOZLza0.s:65     .text:0000000000000058 .L0 
+     /tmp/ccOZLza0.s:148    .text:00000000000000bc .L0 
+     /tmp/ccOZLza0.s:172    .text:00000000000000e8 .L0 
+     /tmp/ccOZLza0.s:203    .text:0000000000000110 .L0 
+     /tmp/ccOZLza0.s:51     .text:0000000000000048 .L10
+     /tmp/ccOZLza0.s:81     .text:0000000000000070 .L2
+     /tmp/ccOZLza0.s:119    .text:00000000000000a4 .L1
+     /tmp/ccOZLza0.s:111    .text:000000000000009c .L4
+     /tmp/ccOZLza0.s:69     .text:0000000000000064 .L5
+     /tmp/ccOZLza0.s:61     .text:0000000000000058 .L11
+     /tmp/ccOZLza0.s:229    .text:0000000000000148 .L16
+     /tmp/ccOZLza0.s:217    .text:0000000000000134 .L12
+     /tmp/ccOZLza0.s:168    .text:00000000000000e8 .L14
+     /tmp/ccOZLza0.s:1588   .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+     /tmp/ccOZLza0.s:2921   .debug_str:0000000000000659 .LASF119
+     /tmp/ccOZLza0.s:2853   .debug_str:000000000000047f .LASF120
+     /tmp/ccOZLza0.s:2783   .debug_str:0000000000000261 .LASF121
+     /tmp/ccOZLza0.s:5      .text:0000000000000000 .Ltext0
+     /tmp/ccOZLza0.s:307    .text:000000000000019c .Letext0
+     /tmp/ccOZLza0.s:2695   .debug_line:0000000000000000 .Ldebug_line0
+     /tmp/ccOZLza0.s:2797   .debug_str:00000000000002ce .LASF0
+     /tmp/ccOZLza0.s:2817   .debug_str:000000000000034a .LASF1
+     /tmp/ccOZLza0.s:2873   .debug_str:0000000000000535 .LASF2
+     /tmp/ccOZLza0.s:2879   .debug_str:0000000000000564 .LASF4
+     /tmp/ccOZLza0.s:2801   .debug_str:00000000000002e5 .LASF3
+     /tmp/ccOZLza0.s:2709   .debug_str:000000000000005d .LASF5
+     /tmp/ccOZLza0.s:2857   .debug_str:00000000000004ab .LASF6
+     /tmp/ccOZLza0.s:2807   .debug_str:0000000000000313 .LASF7
+     /tmp/ccOZLza0.s:2779   .debug_str:0000000000000245 .LASF8
+     /tmp/ccOZLza0.s:2789   .debug_str:000000000000029c .LASF9
+     /tmp/ccOZLza0.s:2731   .debug_str:00000000000000f8 .LASF10
+     /tmp/ccOZLza0.s:2771   .debug_str:00000000000001f9 .LASF11
+     /tmp/ccOZLza0.s:2743   .debug_str:000000000000013d .LASF12
+     /tmp/ccOZLza0.s:2729   .debug_str:00000000000000e8 .LASF13
+GAS LISTING /tmp/ccOZLza0.s 			page 13
+
+
+     /tmp/ccOZLza0.s:2903   .debug_str:00000000000005fb .LASF14
+     /tmp/ccOZLza0.s:2763   .debug_str:00000000000001a5 .LASF15
+     /tmp/ccOZLza0.s:2893   .debug_str:00000000000005b1 .LASF16
+     /tmp/ccOZLza0.s:2851   .debug_str:000000000000046f .LASF27
+     /tmp/ccOZLza0.s:2917   .debug_str:0000000000000649 .LASF29
+     /tmp/ccOZLza0.s:2733   .debug_str:0000000000000107 .LASF17
+     /tmp/ccOZLza0.s:2715   .debug_str:000000000000009e .LASF18
+     /tmp/ccOZLza0.s:2815   .debug_str:0000000000000345 .LASF19
+     /tmp/ccOZLza0.s:2713   .debug_str:0000000000000085 .LASF34
+     /tmp/ccOZLza0.s:2835   .debug_str:00000000000003da .LASF20
+     /tmp/ccOZLza0.s:2711   .debug_str:0000000000000064 .LASF22
+     /tmp/ccOZLza0.s:2907   .debug_str:000000000000060e .LASF21
+     /tmp/ccOZLza0.s:2837   .debug_str:00000000000003e4 .LASF23
+     /tmp/ccOZLza0.s:2799   .debug_str:00000000000002db .LASF36
+     /tmp/ccOZLza0.s:2845   .debug_str:0000000000000430 .LASF81
+     /tmp/ccOZLza0.s:2897   .debug_str:00000000000005d8 .LASF24
+     /tmp/ccOZLza0.s:2945   .debug_str:00000000000007e3 .LASF25
+     /tmp/ccOZLza0.s:2829   .debug_str:00000000000003a7 .LASF26
+     /tmp/ccOZLza0.s:2777   .debug_str:000000000000023b .LASF28
+     /tmp/ccOZLza0.s:2751   .debug_str:0000000000000177 .LASF30
+     /tmp/ccOZLza0.s:2811   .debug_str:0000000000000338 .LASF31
+     /tmp/ccOZLza0.s:2955   .debug_str:0000000000000822 .LASF32
+     /tmp/ccOZLza0.s:2933   .debug_str:0000000000000761 .LASF33
+     /tmp/ccOZLza0.s:2703   .debug_str:0000000000000019 .LASF45
+     /tmp/ccOZLza0.s:2785   .debug_str:000000000000027f .LASF46
+     /tmp/ccOZLza0.s:2943   .debug_str:00000000000007d1 .LASF35
+     /tmp/ccOZLza0.s:2793   .debug_str:00000000000002b0 .LASF116
+     /tmp/ccOZLza0.s:2947   .debug_str:00000000000007e9 .LASF122
+     /tmp/ccOZLza0.s:2843   .debug_str:000000000000042b .LASF37
+     /tmp/ccOZLza0.s:2923   .debug_str:000000000000071d .LASF123
+     /tmp/ccOZLza0.s:2721   .debug_str:00000000000000bf .LASF38
+     /tmp/ccOZLza0.s:2727   .debug_str:00000000000000e2 .LASF39
+     /tmp/ccOZLza0.s:2697   .debug_str:0000000000000000 .LASF40
+     /tmp/ccOZLza0.s:2735   .debug_str:000000000000010c .LASF41
+     /tmp/ccOZLza0.s:2787   .debug_str:0000000000000297 .LASF42
+     /tmp/ccOZLza0.s:2737   .debug_str:0000000000000115 .LASF43
+     /tmp/ccOZLza0.s:2859   .debug_str:00000000000004be .LASF44
+     /tmp/ccOZLza0.s:2809   .debug_str:0000000000000326 .LASF47
+     /tmp/ccOZLza0.s:2881   .debug_str:000000000000056b .LASF48
+     /tmp/ccOZLza0.s:2707   .debug_str:0000000000000051 .LASF49
+     /tmp/ccOZLza0.s:2931   .debug_str:0000000000000755 .LASF50
+     /tmp/ccOZLza0.s:2847   .debug_str:000000000000045d .LASF51
+     /tmp/ccOZLza0.s:2953   .debug_str:000000000000080b .LASF93
+     /tmp/ccOZLza0.s:2849   .debug_str:000000000000046a .LASF124
+     /tmp/ccOZLza0.s:2939   .debug_str:00000000000007a9 .LASF52
+     /tmp/ccOZLza0.s:2867   .debug_str:00000000000004f2 .LASF53
+     /tmp/ccOZLza0.s:2887   .debug_str:0000000000000590 .LASF54
+     /tmp/ccOZLza0.s:2913   .debug_str:0000000000000627 .LASF55
+     /tmp/ccOZLza0.s:2915   .debug_str:0000000000000644 .LASF56
+     /tmp/ccOZLza0.s:2773   .debug_str:0000000000000208 .LASF57
+     /tmp/ccOZLza0.s:2919   .debug_str:0000000000000651 .LASF58
+     /tmp/ccOZLza0.s:2701   .debug_str:0000000000000014 .LASF59
+     /tmp/ccOZLza0.s:2951   .debug_str:0000000000000805 .LASF60
+     /tmp/ccOZLza0.s:2813   .debug_str:000000000000033d .LASF61
+     /tmp/ccOZLza0.s:2925   .debug_str:0000000000000723 .LASF62
+     /tmp/ccOZLza0.s:2865   .debug_str:00000000000004e5 .LASF63
+     /tmp/ccOZLza0.s:2759   .debug_str:0000000000000197 .LASF64
+GAS LISTING /tmp/ccOZLza0.s 			page 14
+
+
+     /tmp/ccOZLza0.s:2719   .debug_str:00000000000000ae .LASF65
+     /tmp/ccOZLza0.s:2909   .debug_str:0000000000000617 .LASF66
+     /tmp/ccOZLza0.s:2841   .debug_str:0000000000000414 .LASF67
+     /tmp/ccOZLza0.s:2875   .debug_str:0000000000000543 .LASF68
+     /tmp/ccOZLza0.s:2941   .debug_str:00000000000007b5 .LASF69
+     /tmp/ccOZLza0.s:2819   .debug_str:000000000000035d .LASF70
+     /tmp/ccOZLza0.s:2935   .debug_str:0000000000000778 .LASF71
+     /tmp/ccOZLza0.s:2753   .debug_str:000000000000017c .LASF72
+     /tmp/ccOZLza0.s:2877   .debug_str:000000000000054c .LASF73
+     /tmp/ccOZLza0.s:2927   .debug_str:000000000000072d .LASF74
+     /tmp/ccOZLza0.s:2833   .debug_str:00000000000003c2 .LASF75
+     /tmp/ccOZLza0.s:2741   .debug_str:0000000000000130 .LASF76
+     /tmp/ccOZLza0.s:2937   .debug_str:0000000000000791 .LASF77
+     /tmp/ccOZLza0.s:2901   .debug_str:00000000000005ee .LASF78
+     /tmp/ccOZLza0.s:2775   .debug_str:0000000000000219 .LASF79
+     /tmp/ccOZLza0.s:2755   .debug_str:0000000000000189 .LASF84
+     /tmp/ccOZLza0.s:2739   .debug_str:000000000000011d .LASF86
+     /tmp/ccOZLza0.s:2717   .debug_str:00000000000000a3 .LASF80
+     /tmp/ccOZLza0.s:2745   .debug_str:000000000000014d .LASF82
+     /tmp/ccOZLza0.s:2889   .debug_str:00000000000005a2 .LASF83
+     /tmp/ccOZLza0.s:2803   .debug_str:00000000000002f7 .LASF125
+     /tmp/ccOZLza0.s:2723   .debug_str:00000000000000c8 .LASF85
+     /tmp/ccOZLza0.s:2821   .debug_str:000000000000036a .LASF87
+     /tmp/ccOZLza0.s:2747   .debug_str:0000000000000164 .LASF88
+     /tmp/ccOZLza0.s:2705   .debug_str:0000000000000029 .LASF89
+     /tmp/ccOZLza0.s:2863   .debug_str:00000000000004d4 .LASF90
+     /tmp/ccOZLza0.s:2895   .debug_str:00000000000005c7 .LASF91
+     /tmp/ccOZLza0.s:2871   .debug_str:0000000000000523 .LASF92
+     /tmp/ccOZLza0.s:2725   .debug_str:00000000000000d6 .LASF94
+     /tmp/ccOZLza0.s:2823   .debug_str:0000000000000383 .LASF95
+     /tmp/ccOZLza0.s:2699   .debug_str:0000000000000008 .LASF96
+     /tmp/ccOZLza0.s:2757   .debug_str:0000000000000192 .LASF97
+     /tmp/ccOZLza0.s:2839   .debug_str:0000000000000405 .LASF98
+     /tmp/ccOZLza0.s:2905   .debug_str:0000000000000607 .LASF99
+     /tmp/ccOZLza0.s:2899   .debug_str:00000000000005dd .LASF100
+     /tmp/ccOZLza0.s:2795   .debug_str:00000000000002c8 .LASF101
+     /tmp/ccOZLza0.s:2767   .debug_str:00000000000001cf .LASF102
+     /tmp/ccOZLza0.s:2949   .debug_str:00000000000007fd .LASF103
+     /tmp/ccOZLza0.s:2883   .debug_str:0000000000000570 .LASF104
+     /tmp/ccOZLza0.s:2957   .debug_str:000000000000082f .LASF105
+     /tmp/ccOZLza0.s:2885   .debug_str:0000000000000582 .LASF126
+     /tmp/ccOZLza0.s:2891   .debug_str:00000000000005a7 .LASF106
+     /tmp/ccOZLza0.s:2827   .debug_str:0000000000000393 .LASF107
+     /tmp/ccOZLza0.s:2781   .debug_str:0000000000000255 .LASF108
+     /tmp/ccOZLza0.s:2805   .debug_str:0000000000000306 .LASF109
+     /tmp/ccOZLza0.s:2911   .debug_str:0000000000000622 .LASF110
+     /tmp/ccOZLza0.s:2825   .debug_str:0000000000000388 .LASF111
+     /tmp/ccOZLza0.s:2861   .debug_str:00000000000004cf .LASF112
+     /tmp/ccOZLza0.s:2855   .debug_str:0000000000000492 .LASF113
+     /tmp/ccOZLza0.s:2769   .debug_str:00000000000001df .LASF114
+     /tmp/ccOZLza0.s:2765   .debug_str:00000000000001bb .LASF115
+     /tmp/ccOZLza0.s:2929   .debug_str:000000000000073a .LASF117
+     /tmp/ccOZLza0.s:2831   .debug_str:00000000000003ac .LASF127
+     /tmp/ccOZLza0.s:2869   .debug_str:000000000000050d .LASF128
+     /tmp/ccOZLza0.s:270    .text:0000000000000174 .LFB38
+     /tmp/ccOZLza0.s:296    .text:000000000000019c .LFE38
+     /tmp/ccOZLza0.s:2540   .debug_loc:0000000000000000 .LLST9
+GAS LISTING /tmp/ccOZLza0.s 			page 15
+
+
+     /tmp/ccOZLza0.s:285    .text:000000000000018c .LVL22
+     /tmp/ccOZLza0.s:238    .text:000000000000014c .LFB37
+     /tmp/ccOZLza0.s:264    .text:0000000000000174 .LFE37
+     /tmp/ccOZLza0.s:2554   .debug_loc:0000000000000039 .LLST8
+     /tmp/ccOZLza0.s:253    .text:0000000000000164 .LVL20
+     /tmp/ccOZLza0.s:143    .text:00000000000000bc .LFB36
+     /tmp/ccOZLza0.s:232    .text:000000000000014c .LFE36
+     /tmp/ccOZLza0.s:179    .text:00000000000000fc .LBB8
+     /tmp/ccOZLza0.s:213    .text:0000000000000130 .LBE8
+     /tmp/ccOZLza0.s:2568   .debug_loc:0000000000000072 .LLST4
+     /tmp/ccOZLza0.s:2575   .debug_loc:0000000000000095 .LLST5
+     /tmp/ccOZLza0.s:187    .text:0000000000000100 .LBB9
+     /tmp/ccOZLza0.s:196    .text:0000000000000108 .LBE9
+     /tmp/ccOZLza0.s:2582   .debug_loc:00000000000000b8 .LLST6
+     /tmp/ccOZLza0.s:2590   .debug_loc:00000000000000dc .LLST7
+     /tmp/ccOZLza0.s:200    .text:0000000000000110 .LVL16
+     /tmp/ccOZLza0.s:212    .text:0000000000000130 .LVL17
+     /tmp/ccOZLza0.s:10     .text:0000000000000000 .LFB35
+     /tmp/ccOZLza0.s:137    .text:00000000000000bc .LFE35
+     /tmp/ccOZLza0.s:2597   .debug_loc:00000000000000ff .LLST0
+     /tmp/ccOZLza0.s:2615   .debug_loc:000000000000014b .LLST1
+     /tmp/ccOZLza0.s:2761   .debug_str:000000000000019d .LASF118
+     /tmp/ccOZLza0.s:2687   .debug_ranges:0000000000000000 .Ldebug_ranges0
+     /tmp/ccOZLza0.s:2639   .debug_loc:00000000000001bb .LLST2
+     /tmp/ccOZLza0.s:2654   .debug_loc:0000000000000204 .LLST3
+     /tmp/ccOZLza0.s:34     .text:000000000000002c .LVL2
+     /tmp/ccOZLza0.s:2749   .debug_str:0000000000000172 .LASF129
+     /tmp/ccOZLza0.s:2791   .debug_str:00000000000002aa .LASF130
+     /tmp/ccOZLza0.s:273    .text:0000000000000174 .LVL21
+     /tmp/ccOZLza0.s:241    .text:000000000000014c .LVL19
+     /tmp/ccOZLza0.s:181    .text:00000000000000fc .LVL13
+     /tmp/ccOZLza0.s:216    .text:0000000000000134 .LVL18
+     /tmp/ccOZLza0.s:185    .text:0000000000000100 .LVL14
+     /tmp/ccOZLza0.s:194    .text:0000000000000108 .LVL15
+     /tmp/ccOZLza0.s:14     .text:0000000000000000 .LVL0
+     /tmp/ccOZLza0.s:32     .text:0000000000000024 .LVL1
+     /tmp/ccOZLza0.s:132    .text:00000000000000b4 .LVL12
+     /tmp/ccOZLza0.s:60     .text:0000000000000058 .LVL3
+     /tmp/ccOZLza0.s:68     .text:0000000000000064 .LVL5
+     /tmp/ccOZLza0.s:100    .text:000000000000008c .LVL8
+     /tmp/ccOZLza0.s:102    .text:0000000000000090 .LVL9
+     /tmp/ccOZLza0.s:110    .text:000000000000009c .LVL10
+     /tmp/ccOZLza0.s:118    .text:00000000000000a4 .LVL11
+     /tmp/ccOZLza0.s:73     .text:0000000000000068 .LVL6
+     /tmp/ccOZLza0.s:80     .text:0000000000000070 .LVL7
+     /tmp/ccOZLza0.s:66     .text:0000000000000060 .LVL4
+     /tmp/ccOZLza0.s:315    .debug_info:0000000000000000 .Ldebug_info0
+     /tmp/ccOZLza0.s:47     .text:0000000000000040 .LBB6
+     /tmp/ccOZLza0.s:52     .text:0000000000000048 .LBE6
+     /tmp/ccOZLza0.s:62     .text:0000000000000058 .LBB7
+     /tmp/ccOZLza0.s:120    .text:00000000000000a4 .LBE7
+
+UNDEFINED SYMBOLS
+_ZN15MemoryAllocator9mem_allocEm
+_ZN9Scheduler3putEP3TCB
+_ZN15MemoryAllocator8mem_freeEPv

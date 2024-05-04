@@ -1,0 +1,1043 @@
+GAS LISTING /tmp/ccqjrmgn.s 			page 1
+
+
+   1              		.file	"MemoryAllocator.cpp"
+   2              		.option pic
+   3              		.option norelax
+   4              		.text
+   5              	.Ltext0:
+   6              		.align	2
+   7              		.globl	_ZN15MemoryAllocator9mem_allocEm
+   9              	_ZN15MemoryAllocator9mem_allocEm:
+  10              	.LFB0:
+  11              		.file 1 "src/MemoryAllocator.cpp"
+   1:src/MemoryAllocator.cpp **** //
+   2:src/MemoryAllocator.cpp **** // Created by os on 6/2/23.
+   3:src/MemoryAllocator.cpp **** //
+   4:src/MemoryAllocator.cpp **** 
+   5:src/MemoryAllocator.cpp **** #include "../h/MemoryAllocator.h"
+   6:src/MemoryAllocator.cpp **** 
+   7:src/MemoryAllocator.cpp **** MemoryAllocator::FreeMem* MemoryAllocator::head = nullptr;
+   8:src/MemoryAllocator.cpp **** bool MemoryAllocator::start = true;
+   9:src/MemoryAllocator.cpp **** 
+  10:src/MemoryAllocator.cpp **** void *MemoryAllocator::mem_alloc(size_t size) {
+  12              		.loc 1 10 47
+  13              		.cfi_startproc
+  14              	.LVL0:
+  15 0000 130101FF 		addi	sp,sp,-16
+  16              		.cfi_def_cfa_offset 16
+  17 0004 23348100 		sd	s0,8(sp)
+  18              		.cfi_offset 8, -8
+  19 0008 13040101 		addi	s0,sp,16
+  20              		.cfi_def_cfa 8, 0
+  21 000c 13070500 		mv	a4,a0
+  11:src/MemoryAllocator.cpp ****     if(start) {
+  22              		.loc 1 11 5
+  23 0010 97070000 		lbu	a5,.LANCHOR0
+  23      83C70700 
+  24 0018 63840704 		beqz	a5,.L2
+  12:src/MemoryAllocator.cpp ****         head = (FreeMem*) HEAP_START_ADDR;
+  25              		.loc 1 12 9
+  26              		.loc 1 12 14 is_stmt 0
+  27 001c 97060000 		la	a3,HEAP_START_ADDR
+  27      83B60600 
+  28 0024 83B70600 		ld	a5,0(a3)
+  29 0028 17060000 		lla	a2,.LANCHOR1
+  29      13060600 
+  30 0030 2330F600 		sd	a5,0(a2)
+  13:src/MemoryAllocator.cpp ****         head->next = head->prev = nullptr;
+  31              		.loc 1 13 9 is_stmt 1
+  32              		.loc 1 13 33 is_stmt 0
+  33 0034 23B40700 		sd	zero,8(a5)
+  34              		.loc 1 13 20
+  35 0038 23B00700 		sd	zero,0(a5)
+  14:src/MemoryAllocator.cpp ****         head->size = (uint64)HEAP_END_ADDR - (uint64)HEAP_START_ADDR;
+  36              		.loc 1 14 9 is_stmt 1
+  37              		.loc 1 14 15 is_stmt 0
+  38 003c 03360600 		ld	a2,0(a2)
+  39              		.loc 1 14 44
+  40 0040 97070000 		la	a5,HEAP_END_ADDR
+  40      83B70700 
+GAS LISTING /tmp/ccqjrmgn.s 			page 2
+
+
+  41 0048 83B70700 		ld	a5,0(a5)
+  42 004c 83B60600 		ld	a3,0(a3)
+  43 0050 B387D740 		sub	a5,a5,a3
+  44              		.loc 1 14 20
+  45 0054 2338F600 		sd	a5,16(a2)
+  15:src/MemoryAllocator.cpp ****         start = false;
+  46              		.loc 1 15 9 is_stmt 1
+  47              		.loc 1 15 15 is_stmt 0
+  48 0058 97070000 		sb	zero,.LANCHOR0,a5
+  48      23800700 
+  49              	.L2:
+  16:src/MemoryAllocator.cpp ****     }
+  17:src/MemoryAllocator.cpp **** 
+  18:src/MemoryAllocator.cpp ****     if(!head) return nullptr;
+  50              		.loc 1 18 5 is_stmt 1
+  51              		.loc 1 18 8 is_stmt 0
+  52 0060 17050000 		ld	a0,.LANCHOR1
+  52      03350500 
+  53              	.LVL1:
+  54              		.loc 1 18 5
+  55 0068 63080506 		beqz	a0,.L1
+  19:src/MemoryAllocator.cpp **** 
+  20:src/MemoryAllocator.cpp ****     FreeMem *cur = head;
+  56              		.loc 1 20 5 is_stmt 1
+  57              	.LVL2:
+  21:src/MemoryAllocator.cpp ****     size = (size + sizeof(FreeMem) + MEM_BLOCK_SIZE - 1) / MEM_BLOCK_SIZE * MEM_BLOCK_SIZE;
+  58              		.loc 1 21 5
+  59              		.loc 1 21 53 is_stmt 0
+  60 006c 13077705 		addi	a4,a4,87
+  61              	.LVL3:
+  62              		.loc 1 21 10
+  63 0070 137707FC 		andi	a4,a4,-64
+  64              	.LVL4:
+  65              	.L5:
+  22:src/MemoryAllocator.cpp ****     while(cur->size < size) {
+  66              		.loc 1 22 5 is_stmt 1
+  67              		.loc 1 22 21
+  68              		.loc 1 22 16 is_stmt 0
+  69 0074 83370501 		ld	a5,16(a0)
+  70              		.loc 1 22 21
+  71 0078 63F8E700 		bgeu	a5,a4,.L4
+  23:src/MemoryAllocator.cpp ****         cur = cur->next;
+  72              		.loc 1 23 9 is_stmt 1
+  73              		.loc 1 23 13 is_stmt 0
+  74 007c 03350500 		ld	a0,0(a0)
+  75              	.LVL5:
+  24:src/MemoryAllocator.cpp ****         if(!cur) return nullptr;
+  76              		.loc 1 24 9 is_stmt 1
+  77 0080 E31A05FE 		bnez	a0,.L5
+  78 0084 6F004005 		j	.L1
+  79              	.L4:
+  25:src/MemoryAllocator.cpp ****     }
+  26:src/MemoryAllocator.cpp **** 
+  27:src/MemoryAllocator.cpp **** 
+  28:src/MemoryAllocator.cpp ****     if(cur->size - size > 0){
+  80              		.loc 1 28 5
+  81              	.LBB2:
+GAS LISTING /tmp/ccqjrmgn.s 			page 3
+
+
+  82 0088 6384E702 		beq	a5,a4,.L6
+  83              	.LBB3:
+  29:src/MemoryAllocator.cpp ****         FreeMem * newFree = (FreeMem*)((uint64)cur + size);
+  84              		.loc 1 29 9
+  85              		.loc 1 29 52 is_stmt 0
+  86 008c B306E500 		add	a3,a0,a4
+  87              	.LVL6:
+  30:src/MemoryAllocator.cpp ****         newFree->size = cur->size - size;
+  88              		.loc 1 30 9 is_stmt 1
+  89              		.loc 1 30 35 is_stmt 0
+  90 0090 B387E740 		sub	a5,a5,a4
+  91              		.loc 1 30 23
+  92 0094 23B8F600 		sd	a5,16(a3)
+  31:src/MemoryAllocator.cpp ****         newFree->prev = cur;
+  93              		.loc 1 31 9 is_stmt 1
+  94              		.loc 1 31 23 is_stmt 0
+  95 0098 23B4A600 		sd	a0,8(a3)
+  32:src/MemoryAllocator.cpp ****         newFree->next = cur->next;
+  96              		.loc 1 32 9 is_stmt 1
+  97              		.loc 1 32 30 is_stmt 0
+  98 009c 83370500 		ld	a5,0(a0)
+  99              		.loc 1 32 23
+ 100 00a0 23B0F600 		sd	a5,0(a3)
+  33:src/MemoryAllocator.cpp ****         if(cur->next != nullptr)
+ 101              		.loc 1 33 9 is_stmt 1
+ 102 00a4 63840700 		beqz	a5,.L7
+  34:src/MemoryAllocator.cpp ****             cur->next->prev = newFree;
+ 103              		.loc 1 34 13
+ 104              		.loc 1 34 29 is_stmt 0
+ 105 00a8 23B4D700 		sd	a3,8(a5)
+ 106              	.L7:
+  35:src/MemoryAllocator.cpp ****         cur->next = newFree;
+ 107              		.loc 1 35 9 is_stmt 1
+ 108              		.loc 1 35 19 is_stmt 0
+ 109 00ac 2330D500 		sd	a3,0(a0)
+ 110              	.LVL7:
+ 111              	.L6:
+ 112              	.LBE3:
+ 113              	.LBE2:
+  36:src/MemoryAllocator.cpp ****     }
+  37:src/MemoryAllocator.cpp **** 
+  38:src/MemoryAllocator.cpp ****     if(cur->prev == nullptr){
+ 114              		.loc 1 38 5 is_stmt 1
+ 115              		.loc 1 38 13 is_stmt 0
+ 116 00b0 83378500 		ld	a5,8(a0)
+ 117              		.loc 1 38 5
+ 118 00b4 63880702 		beqz	a5,.L11
+  39:src/MemoryAllocator.cpp ****         head = cur->next;
+  40:src/MemoryAllocator.cpp ****         head->prev = nullptr;
+  41:src/MemoryAllocator.cpp ****     }
+  42:src/MemoryAllocator.cpp ****     else{
+  43:src/MemoryAllocator.cpp ****         cur->prev->next = cur->next;
+ 119              		.loc 1 43 9 is_stmt 1
+ 120              		.loc 1 43 32 is_stmt 0
+ 121 00b8 83360500 		ld	a3,0(a0)
+ 122              		.loc 1 43 25
+ 123 00bc 23B0D700 		sd	a3,0(a5)
+GAS LISTING /tmp/ccqjrmgn.s 			page 4
+
+
+  44:src/MemoryAllocator.cpp ****         cur->next->prev = cur->prev;
+ 124              		.loc 1 44 9 is_stmt 1
+ 125              		.loc 1 44 32 is_stmt 0
+ 126 00c0 83378500 		ld	a5,8(a0)
+ 127              		.loc 1 44 25
+ 128 00c4 23B4F600 		sd	a5,8(a3)
+ 129              	.L9:
+  45:src/MemoryAllocator.cpp ****     }
+  46:src/MemoryAllocator.cpp **** 
+  47:src/MemoryAllocator.cpp ****     cur->size = size;
+ 130              		.loc 1 47 5 is_stmt 1
+ 131              		.loc 1 47 15 is_stmt 0
+ 132 00c8 2338E500 		sd	a4,16(a0)
+  48:src/MemoryAllocator.cpp ****     cur->next = cur->prev = nullptr;
+ 133              		.loc 1 48 5 is_stmt 1
+ 134              		.loc 1 48 27 is_stmt 0
+ 135 00cc 23340500 		sd	zero,8(a0)
+ 136              		.loc 1 48 15
+ 137 00d0 23300500 		sd	zero,0(a0)
+  49:src/MemoryAllocator.cpp **** 
+  50:src/MemoryAllocator.cpp ****     return (void*)((uint64)cur + sizeof(FreeMem));
+ 138              		.loc 1 50 5 is_stmt 1
+ 139              		.loc 1 50 32 is_stmt 0
+ 140 00d4 13058501 		addi	a0,a0,24
+ 141              	.LVL8:
+ 142              	.L1:
+  51:src/MemoryAllocator.cpp **** }
+ 143              		.loc 1 51 1
+ 144 00d8 03348100 		ld	s0,8(sp)
+ 145              		.cfi_remember_state
+ 146              		.cfi_restore 8
+ 147              		.cfi_def_cfa 2, 16
+ 148 00dc 13010101 		addi	sp,sp,16
+ 149              		.cfi_def_cfa_offset 0
+ 150 00e0 67800000 		jr	ra
+ 151              	.LVL9:
+ 152              	.L11:
+ 153              		.cfi_restore_state
+  39:src/MemoryAllocator.cpp ****         head->prev = nullptr;
+ 154              		.loc 1 39 9 is_stmt 1
+  39:src/MemoryAllocator.cpp ****         head->prev = nullptr;
+ 155              		.loc 1 39 21 is_stmt 0
+ 156 00e4 83370500 		ld	a5,0(a0)
+  39:src/MemoryAllocator.cpp ****         head->prev = nullptr;
+ 157              		.loc 1 39 14
+ 158 00e8 97060000 		sd	a5,.LANCHOR1,a3
+ 158      23B0F600 
+  40:src/MemoryAllocator.cpp ****     }
+ 159              		.loc 1 40 9 is_stmt 1
+  40:src/MemoryAllocator.cpp ****     }
+ 160              		.loc 1 40 20 is_stmt 0
+ 161 00f0 23B40700 		sd	zero,8(a5)
+ 162 00f4 6FF05FFD 		j	.L9
+ 163              		.cfi_endproc
+ 164              	.LFE0:
+ 166              		.align	2
+ 167              		.globl	_ZN15MemoryAllocator9tryToJoinEPNS_7FreeMemE
+GAS LISTING /tmp/ccqjrmgn.s 			page 5
+
+
+ 169              	_ZN15MemoryAllocator9tryToJoinEPNS_7FreeMemE:
+ 170              	.LFB2:
+  52:src/MemoryAllocator.cpp **** 
+  53:src/MemoryAllocator.cpp **** int MemoryAllocator::mem_free(void * ptr) {
+  54:src/MemoryAllocator.cpp ****     if(start) return -3;
+  55:src/MemoryAllocator.cpp ****     ptr = (void *)((uint64) ptr - sizeof(FreeMem));
+  56:src/MemoryAllocator.cpp ****     if((uint64*) ptr < (uint64*) HEAP_START_ADDR || (uint64*) ptr >= (uint64*) HEAP_END_ADDR) retur
+  57:src/MemoryAllocator.cpp **** 
+  58:src/MemoryAllocator.cpp ****     FreeMem* cur = nullptr;
+  59:src/MemoryAllocator.cpp ****     if(head && (uint64*)ptr >= (uint64*) head){
+  60:src/MemoryAllocator.cpp ****         for(cur = head; cur->next != nullptr && (uint64*) ptr > (uint64*) cur->next; cur = cur->nex
+  61:src/MemoryAllocator.cpp ****         if((uint64) cur + cur->size >= (uint64) ptr) return -2;
+  62:src/MemoryAllocator.cpp ****     }
+  63:src/MemoryAllocator.cpp **** 
+  64:src/MemoryAllocator.cpp ****     FreeMem* newFree = (FreeMem*) ptr;
+  65:src/MemoryAllocator.cpp ****     newFree->prev = cur;
+  66:src/MemoryAllocator.cpp **** 
+  67:src/MemoryAllocator.cpp ****     if(cur)
+  68:src/MemoryAllocator.cpp ****         newFree->next = cur->next;
+  69:src/MemoryAllocator.cpp ****     else
+  70:src/MemoryAllocator.cpp ****         newFree->next = head;
+  71:src/MemoryAllocator.cpp **** 
+  72:src/MemoryAllocator.cpp ****     if(newFree->next)
+  73:src/MemoryAllocator.cpp ****         newFree->next->prev = newFree;
+  74:src/MemoryAllocator.cpp **** 
+  75:src/MemoryAllocator.cpp ****     if(cur)
+  76:src/MemoryAllocator.cpp ****         cur->next = newFree;
+  77:src/MemoryAllocator.cpp ****     else
+  78:src/MemoryAllocator.cpp ****         head = newFree;
+  79:src/MemoryAllocator.cpp **** 
+  80:src/MemoryAllocator.cpp ****     tryToJoin(newFree);
+  81:src/MemoryAllocator.cpp ****     return 0;
+  82:src/MemoryAllocator.cpp **** }
+  83:src/MemoryAllocator.cpp **** 
+  84:src/MemoryAllocator.cpp **** void MemoryAllocator::tryToJoin(FreeMem *cur) {
+ 171              		.loc 1 84 47 is_stmt 1
+ 172              		.cfi_startproc
+ 173              	.LVL10:
+ 174 00f8 130101FF 		addi	sp,sp,-16
+ 175              		.cfi_def_cfa_offset 16
+ 176 00fc 23348100 		sd	s0,8(sp)
+ 177              		.cfi_offset 8, -8
+ 178 0100 13040101 		addi	s0,sp,16
+ 179              		.cfi_def_cfa 8, 0
+  85:src/MemoryAllocator.cpp ****     if(cur->prev && (uint64) cur->prev + cur->prev->size == (uint64) cur){
+ 180              		.loc 1 85 5
+ 181              		.loc 1 85 13 is_stmt 0
+ 182 0104 83378500 		ld	a5,8(a0)
+ 183              		.loc 1 85 5
+ 184 0108 63880700 		beqz	a5,.L13
+ 185              		.loc 1 85 53 discriminator 1
+ 186 010c 03B70701 		ld	a4,16(a5)
+ 187              		.loc 1 85 40 discriminator 1
+ 188 0110 B386E700 		add	a3,a5,a4
+ 189              		.loc 1 85 18 discriminator 1
+ 190 0114 6382A602 		beq	a3,a0,.L17
+ 191              	.L13:
+GAS LISTING /tmp/ccqjrmgn.s 			page 6
+
+
+  86:src/MemoryAllocator.cpp ****         cur->prev->size += cur->size;
+  87:src/MemoryAllocator.cpp ****         cur->prev->next = cur->next;
+  88:src/MemoryAllocator.cpp ****         if(cur->next)
+  89:src/MemoryAllocator.cpp ****             cur->next->prev = cur->prev;
+  90:src/MemoryAllocator.cpp ****         cur = cur->prev;
+  91:src/MemoryAllocator.cpp ****     }
+  92:src/MemoryAllocator.cpp **** 
+  93:src/MemoryAllocator.cpp ****     if(cur->next && (uint64) cur + cur->size == (uint64) cur->next){
+ 192              		.loc 1 93 5 is_stmt 1
+ 193              		.loc 1 93 13 is_stmt 0
+ 194 0118 83370500 		ld	a5,0(a0)
+ 195              		.loc 1 93 5
+ 196 011c 63880700 		beqz	a5,.L12
+ 197              		.loc 1 93 41 discriminator 1
+ 198 0120 03370501 		ld	a4,16(a0)
+ 199              		.loc 1 93 34 discriminator 1
+ 200 0124 B306E500 		add	a3,a0,a4
+ 201              		.loc 1 93 18 discriminator 1
+ 202 0128 638EF602 		beq	a3,a5,.L18
+ 203              	.L12:
+  94:src/MemoryAllocator.cpp ****         cur->size += cur->next->size;
+  95:src/MemoryAllocator.cpp ****         cur->next = cur->next->next;
+  96:src/MemoryAllocator.cpp ****         if(cur->next)
+  97:src/MemoryAllocator.cpp ****             cur->next->prev = cur;
+  98:src/MemoryAllocator.cpp ****     }
+  99:src/MemoryAllocator.cpp **** }...
+ 204              		.loc 1 99 1
+ 205 012c 03348100 		ld	s0,8(sp)
+ 206              		.cfi_remember_state
+ 207              		.cfi_restore 8
+ 208              		.cfi_def_cfa 2, 16
+ 209 0130 13010101 		addi	sp,sp,16
+ 210              		.cfi_def_cfa_offset 0
+ 211 0134 67800000 		jr	ra
+ 212              	.L17:
+ 213              		.cfi_restore_state
+  86:src/MemoryAllocator.cpp ****         cur->prev->size += cur->size;
+ 214              		.loc 1 86 9 is_stmt 1
+  86:src/MemoryAllocator.cpp ****         cur->prev->size += cur->size;
+ 215              		.loc 1 86 33 is_stmt 0
+ 216 0138 83360501 		ld	a3,16(a0)
+  86:src/MemoryAllocator.cpp ****         cur->prev->size += cur->size;
+ 217              		.loc 1 86 25
+ 218 013c 3307D700 		add	a4,a4,a3
+ 219 0140 23B8E700 		sd	a4,16(a5)
+  87:src/MemoryAllocator.cpp ****         cur->prev->next = cur->next;
+ 220              		.loc 1 87 9 is_stmt 1
+  87:src/MemoryAllocator.cpp ****         cur->prev->next = cur->next;
+ 221              		.loc 1 87 14 is_stmt 0
+ 222 0144 03378500 		ld	a4,8(a0)
+  87:src/MemoryAllocator.cpp ****         cur->prev->next = cur->next;
+ 223              		.loc 1 87 32
+ 224 0148 83370500 		ld	a5,0(a0)
+  87:src/MemoryAllocator.cpp ****         cur->prev->next = cur->next;
+ 225              		.loc 1 87 25
+ 226 014c 2330F700 		sd	a5,0(a4)
+  88:src/MemoryAllocator.cpp ****         if(cur->next)
+GAS LISTING /tmp/ccqjrmgn.s 			page 7
+
+
+ 227              		.loc 1 88 9 is_stmt 1
+ 228 0150 63860700 		beqz	a5,.L14
+  89:src/MemoryAllocator.cpp ****             cur->next->prev = cur->prev;
+ 229              		.loc 1 89 13
+  89:src/MemoryAllocator.cpp ****             cur->next->prev = cur->prev;
+ 230              		.loc 1 89 36 is_stmt 0
+ 231 0154 03378500 		ld	a4,8(a0)
+  89:src/MemoryAllocator.cpp ****             cur->next->prev = cur->prev;
+ 232              		.loc 1 89 29
+ 233 0158 23B4E700 		sd	a4,8(a5)
+ 234              	.L14:
+  90:src/MemoryAllocator.cpp ****         cur = cur->prev;
+ 235              		.loc 1 90 9 is_stmt 1
+  90:src/MemoryAllocator.cpp ****         cur = cur->prev;
+ 236              		.loc 1 90 13 is_stmt 0
+ 237 015c 03358500 		ld	a0,8(a0)
+ 238              	.LVL11:
+ 239 0160 6FF09FFB 		j	.L13
+ 240              	.L18:
+  94:src/MemoryAllocator.cpp ****         cur->size += cur->next->size;
+ 241              		.loc 1 94 9 is_stmt 1
+  94:src/MemoryAllocator.cpp ****         cur->size += cur->next->size;
+ 242              		.loc 1 94 33 is_stmt 0
+ 243 0164 83B60701 		ld	a3,16(a5)
+  94:src/MemoryAllocator.cpp ****         cur->size += cur->next->size;
+ 244              		.loc 1 94 19
+ 245 0168 3307D700 		add	a4,a4,a3
+ 246 016c 2338E500 		sd	a4,16(a0)
+  95:src/MemoryAllocator.cpp ****         cur->next = cur->next->next;
+ 247              		.loc 1 95 9 is_stmt 1
+  95:src/MemoryAllocator.cpp ****         cur->next = cur->next->next;
+ 248              		.loc 1 95 32 is_stmt 0
+ 249 0170 83B70700 		ld	a5,0(a5)
+  95:src/MemoryAllocator.cpp ****         cur->next = cur->next->next;
+ 250              		.loc 1 95 19
+ 251 0174 2330F500 		sd	a5,0(a0)
+  96:src/MemoryAllocator.cpp ****         if(cur->next)
+ 252              		.loc 1 96 9 is_stmt 1
+ 253 0178 E38A07FA 		beqz	a5,.L12
+  97:src/MemoryAllocator.cpp ****             cur->next->prev = cur;
+ 254              		.loc 1 97 13
+  97:src/MemoryAllocator.cpp ****             cur->next->prev = cur;
+ 255              		.loc 1 97 29 is_stmt 0
+ 256 017c 23B4A700 		sd	a0,8(a5)
+ 257              		.loc 1 99 1
+ 258 0180 6FF0DFFA 		j	.L12
+ 259              		.cfi_endproc
+ 260              	.LFE2:
+ 262              		.align	2
+ 263              		.globl	_ZN15MemoryAllocator8mem_freeEPv
+ 265              	_ZN15MemoryAllocator8mem_freeEPv:
+ 266              	.LFB1:
+  53:src/MemoryAllocator.cpp **** int MemoryAllocator::mem_free(void * ptr) {
+ 267              		.loc 1 53 43 is_stmt 1
+ 268              		.cfi_startproc
+ 269              	.LVL12:
+  54:src/MemoryAllocator.cpp ****     if(start) return -3;
+GAS LISTING /tmp/ccqjrmgn.s 			page 8
+
+
+ 270              		.loc 1 54 5
+ 271 0184 97070000 		lbu	a5,.LANCHOR0
+ 271      83C70700 
+ 272 018c 639C070C 		bnez	a5,.L31
+ 273 0190 93060500 		mv	a3,a0
+  55:src/MemoryAllocator.cpp ****     ptr = (void *)((uint64) ptr - sizeof(FreeMem));
+ 274              		.loc 1 55 5
+  55:src/MemoryAllocator.cpp ****     ptr = (void *)((uint64) ptr - sizeof(FreeMem));
+ 275              		.loc 1 55 33 is_stmt 0
+ 276 0194 130585FE 		addi	a0,a0,-24
+ 277              	.LVL13:
+  55:src/MemoryAllocator.cpp ****     ptr = (void *)((uint64) ptr - sizeof(FreeMem));
+ 278              		.loc 1 55 9
+ 279 0198 13060500 		mv	a2,a0
+ 280              	.LVL14:
+  56:src/MemoryAllocator.cpp ****     if((uint64*) ptr < (uint64*) HEAP_START_ADDR || (uint64*) ptr >= (uint64*) HEAP_END_ADDR) retur
+ 281              		.loc 1 56 5 is_stmt 1
+  56:src/MemoryAllocator.cpp ****     if((uint64*) ptr < (uint64*) HEAP_START_ADDR || (uint64*) ptr >= (uint64*) HEAP_END_ADDR) retur
+ 282              		.loc 1 56 24 is_stmt 0
+ 283 019c 97070000 		la	a5,HEAP_START_ADDR
+ 283      83B70700 
+ 284 01a4 83B70700 		ld	a5,0(a5)
+  56:src/MemoryAllocator.cpp ****     if((uint64*) ptr < (uint64*) HEAP_START_ADDR || (uint64*) ptr >= (uint64*) HEAP_END_ADDR) retur
+ 285              		.loc 1 56 5
+ 286 01a8 6362F50C 		bgtu	a5,a0,.L32
+  56:src/MemoryAllocator.cpp ****     if((uint64*) ptr < (uint64*) HEAP_START_ADDR || (uint64*) ptr >= (uint64*) HEAP_END_ADDR) retur
+ 287              		.loc 1 56 70 discriminator 2
+ 288 01ac 97070000 		la	a5,HEAP_END_ADDR
+ 288      83B70700 
+ 289 01b4 83B70700 		ld	a5,0(a5)
+  56:src/MemoryAllocator.cpp ****     if((uint64*) ptr < (uint64*) HEAP_START_ADDR || (uint64*) ptr >= (uint64*) HEAP_END_ADDR) retur
+ 290              		.loc 1 56 50 discriminator 2
+ 291 01b8 637EF50A 		bleu	a5,a0,.L33
+  58:src/MemoryAllocator.cpp ****     FreeMem* cur = nullptr;
+ 292              		.loc 1 58 5 is_stmt 1
+ 293              	.LVL15:
+  59:src/MemoryAllocator.cpp ****     if(head && (uint64*)ptr >= (uint64*) head){
+ 294              		.loc 1 59 5
+  59:src/MemoryAllocator.cpp ****     if(head && (uint64*)ptr >= (uint64*) head){
+ 295              		.loc 1 59 42 is_stmt 0
+ 296 01bc 97050000 		ld	a1,.LANCHOR1
+ 296      83B50500 
+  59:src/MemoryAllocator.cpp ****     if(head && (uint64*)ptr >= (uint64*) head){
+ 297              		.loc 1 59 5
+ 298 01c4 638E0502 		beqz	a1,.L21
+  59:src/MemoryAllocator.cpp ****     if(head && (uint64*)ptr >= (uint64*) head){
+ 299              		.loc 1 59 13 discriminator 1
+ 300 01c8 6362B504 		bgtu	a1,a0,.L22
+  60:src/MemoryAllocator.cpp ****         for(cur = head; cur->next != nullptr && (uint64*) ptr > (uint64*) cur->next; cur = cur->nex
+ 301              		.loc 1 60 17
+ 302 01cc 93870500 		mv	a5,a1
+ 303              	.LVL16:
+ 304              	.L24:
+  60:src/MemoryAllocator.cpp ****         for(cur = head; cur->next != nullptr && (uint64*) ptr > (uint64*) cur->next; cur = cur->nex
+ 305              		.loc 1 60 46 is_stmt 1 discriminator 4
+ 306 01d0 13870700 		mv	a4,a5
+  60:src/MemoryAllocator.cpp ****         for(cur = head; cur->next != nullptr && (uint64*) ptr > (uint64*) cur->next; cur = cur->nex
+GAS LISTING /tmp/ccqjrmgn.s 			page 9
+
+
+ 307              		.loc 1 60 30 is_stmt 0 discriminator 4
+ 308 01d4 83B70700 		ld	a5,0(a5)
+ 309              	.LVL17:
+  60:src/MemoryAllocator.cpp ****         for(cur = head; cur->next != nullptr && (uint64*) ptr > (uint64*) cur->next; cur = cur->nex
+ 310              		.loc 1 60 46 discriminator 4
+ 311 01d8 63840700 		beqz	a5,.L23
+  60:src/MemoryAllocator.cpp ****         for(cur = head; cur->next != nullptr && (uint64*) ptr > (uint64*) cur->next; cur = cur->nex
+ 312              		.loc 1 60 46 discriminator 2
+ 313 01dc E3EAC7FE 		bltu	a5,a2,.L24
+ 314              	.L23:
+  61:src/MemoryAllocator.cpp ****         if((uint64) cur + cur->size >= (uint64) ptr) return -2;
+ 315              		.loc 1 61 9 is_stmt 1
+  61:src/MemoryAllocator.cpp ****         if((uint64) cur + cur->size >= (uint64) ptr) return -2;
+ 316              		.loc 1 61 32 is_stmt 0
+ 317 01e0 83370701 		ld	a5,16(a4)
+  61:src/MemoryAllocator.cpp ****         if((uint64) cur + cur->size >= (uint64) ptr) return -2;
+ 318              		.loc 1 61 25
+ 319 01e4 B307F700 		add	a5,a4,a5
+  61:src/MemoryAllocator.cpp ****         if((uint64) cur + cur->size >= (uint64) ptr) return -2;
+ 320              		.loc 1 61 9
+ 321 01e8 63FAA708 		bleu	a0,a5,.L39
+  64:src/MemoryAllocator.cpp ****     FreeMem* newFree = (FreeMem*) ptr;
+ 322              		.loc 1 64 5 is_stmt 1
+ 323              	.LVL18:
+  65:src/MemoryAllocator.cpp ****     newFree->prev = cur;
+ 324              		.loc 1 65 5
+  65:src/MemoryAllocator.cpp ****     newFree->prev = cur;
+ 325              		.loc 1 65 19 is_stmt 0
+ 326 01ec 2334E500 		sd	a4,8(a0)
+  67:src/MemoryAllocator.cpp ****     if(cur)
+ 327              		.loc 1 67 5 is_stmt 1
+ 328 01f0 63020702 		beqz	a4,.L26
+  68:src/MemoryAllocator.cpp ****         newFree->next = cur->next;
+ 329              		.loc 1 68 9
+  68:src/MemoryAllocator.cpp ****         newFree->next = cur->next;
+ 330              		.loc 1 68 30 is_stmt 0
+ 331 01f4 83370700 		ld	a5,0(a4)
+  68:src/MemoryAllocator.cpp ****         newFree->next = cur->next;
+ 332              		.loc 1 68 23
+ 333 01f8 23B4F6FE 		sd	a5,-24(a3)
+ 334 01fc 6F00C001 		j	.L27
+ 335              	.LVL19:
+ 336              	.L21:
+  64:src/MemoryAllocator.cpp ****     FreeMem* newFree = (FreeMem*) ptr;
+ 337              		.loc 1 64 5 is_stmt 1
+  65:src/MemoryAllocator.cpp ****     newFree->prev = cur;
+ 338              		.loc 1 65 5
+  65:src/MemoryAllocator.cpp ****     newFree->prev = cur;
+ 339              		.loc 1 65 19 is_stmt 0
+ 340 0200 23340500 		sd	zero,8(a0)
+  67:src/MemoryAllocator.cpp ****     if(cur)
+ 341              		.loc 1 67 5 is_stmt 1
+  58:src/MemoryAllocator.cpp ****     FreeMem* cur = nullptr;
+ 342              		.loc 1 58 14 is_stmt 0
+ 343 0204 13870500 		mv	a4,a1
+ 344 0208 6F00C000 		j	.L26
+ 345              	.LVL20:
+GAS LISTING /tmp/ccqjrmgn.s 			page 10
+
+
+ 346              	.L22:
+  64:src/MemoryAllocator.cpp ****     FreeMem* newFree = (FreeMem*) ptr;
+ 347              		.loc 1 64 5 is_stmt 1
+  65:src/MemoryAllocator.cpp ****     newFree->prev = cur;
+ 348              		.loc 1 65 5
+  65:src/MemoryAllocator.cpp ****     newFree->prev = cur;
+ 349              		.loc 1 65 19 is_stmt 0
+ 350 020c 23340500 		sd	zero,8(a0)
+  67:src/MemoryAllocator.cpp ****     if(cur)
+ 351              		.loc 1 67 5 is_stmt 1
+  58:src/MemoryAllocator.cpp ****     FreeMem* cur = nullptr;
+ 352              		.loc 1 58 14 is_stmt 0
+ 353 0210 13070000 		li	a4,0
+ 354              	.LVL21:
+ 355              	.L26:
+  70:src/MemoryAllocator.cpp ****         newFree->next = head;
+ 356              		.loc 1 70 9 is_stmt 1
+  70:src/MemoryAllocator.cpp ****         newFree->next = head;
+ 357              		.loc 1 70 23 is_stmt 0
+ 358 0214 23B4B6FE 		sd	a1,-24(a3)
+ 359              	.L27:
+  53:src/MemoryAllocator.cpp **** int MemoryAllocator::mem_free(void * ptr) {
+ 360              		.loc 1 53 43
+ 361 0218 130101FF 		addi	sp,sp,-16
+ 362              		.cfi_def_cfa_offset 16
+ 363 021c 23341100 		sd	ra,8(sp)
+ 364 0220 23308100 		sd	s0,0(sp)
+ 365              		.cfi_offset 1, -8
+ 366              		.cfi_offset 8, -16
+ 367 0224 13040101 		addi	s0,sp,16
+ 368              		.cfi_def_cfa 8, 0
+  72:src/MemoryAllocator.cpp ****     if(newFree->next)
+ 369              		.loc 1 72 5 is_stmt 1
+  72:src/MemoryAllocator.cpp ****     if(newFree->next)
+ 370              		.loc 1 72 17 is_stmt 0
+ 371 0228 83B786FE 		ld	a5,-24(a3)
+  72:src/MemoryAllocator.cpp ****     if(newFree->next)
+ 372              		.loc 1 72 5
+ 373 022c 63840700 		beqz	a5,.L28
+  73:src/MemoryAllocator.cpp ****         newFree->next->prev = newFree;
+ 374              		.loc 1 73 9 is_stmt 1
+  73:src/MemoryAllocator.cpp ****         newFree->next->prev = newFree;
+ 375              		.loc 1 73 29 is_stmt 0
+ 376 0230 23B4A700 		sd	a0,8(a5)
+ 377              	.L28:
+  75:src/MemoryAllocator.cpp ****     if(cur)
+ 378              		.loc 1 75 5 is_stmt 1
+ 379 0234 63020702 		beqz	a4,.L29
+  76:src/MemoryAllocator.cpp ****         cur->next = newFree;
+ 380              		.loc 1 76 9
+  76:src/MemoryAllocator.cpp ****         cur->next = newFree;
+ 381              		.loc 1 76 19 is_stmt 0
+ 382 0238 2330A700 		sd	a0,0(a4)
+ 383              	.L30:
+  80:src/MemoryAllocator.cpp ****     tryToJoin(newFree);
+ 384              		.loc 1 80 5 is_stmt 1
+  80:src/MemoryAllocator.cpp ****     tryToJoin(newFree);
+GAS LISTING /tmp/ccqjrmgn.s 			page 11
+
+
+ 385              		.loc 1 80 14 is_stmt 0
+ 386 023c 97000000 		call	_ZN15MemoryAllocator9tryToJoinEPNS_7FreeMemE
+ 386      E7800000 
+ 387              	.LVL22:
+  81:src/MemoryAllocator.cpp ****     return 0;
+ 388              		.loc 1 81 5 is_stmt 1
+  81:src/MemoryAllocator.cpp ****     return 0;
+ 389              		.loc 1 81 12 is_stmt 0
+ 390 0244 13050000 		li	a0,0
+  82:src/MemoryAllocator.cpp **** }
+ 391              		.loc 1 82 1
+ 392 0248 83308100 		ld	ra,8(sp)
+ 393              		.cfi_remember_state
+ 394              		.cfi_restore 1
+ 395 024c 03340100 		ld	s0,0(sp)
+ 396              		.cfi_restore 8
+ 397              		.cfi_def_cfa 2, 16
+ 398 0250 13010101 		addi	sp,sp,16
+ 399              		.cfi_def_cfa_offset 0
+ 400 0254 67800000 		jr	ra
+ 401              	.LVL23:
+ 402              	.L29:
+ 403              		.cfi_restore_state
+  78:src/MemoryAllocator.cpp ****         head = newFree;
+ 404              		.loc 1 78 9 is_stmt 1
+  78:src/MemoryAllocator.cpp ****         head = newFree;
+ 405              		.loc 1 78 14 is_stmt 0
+ 406 0258 97070000 		sd	a0,.LANCHOR1,a5
+ 406      23B0A700 
+ 407 0260 6FF0DFFD 		j	.L30
+ 408              	.LVL24:
+ 409              	.L31:
+ 410              		.cfi_def_cfa_register 2
+ 411              		.cfi_restore 1
+ 412              		.cfi_restore 8
+  54:src/MemoryAllocator.cpp ****     if(start) return -3;
+ 413              		.loc 1 54 23
+ 414 0264 1305D0FF 		li	a0,-3
+ 415              	.LVL25:
+ 416 0268 67800000 		ret
+ 417              	.LVL26:
+ 418              	.L32:
+  56:src/MemoryAllocator.cpp ****     if((uint64*) ptr < (uint64*) HEAP_START_ADDR || (uint64*) ptr >= (uint64*) HEAP_END_ADDR) retur
+ 419              		.loc 1 56 103
+ 420 026c 1305F0FF 		li	a0,-1
+ 421              	.LVL27:
+ 422 0270 67800000 		ret
+ 423              	.LVL28:
+ 424              	.L33:
+ 425 0274 1305F0FF 		li	a0,-1
+ 426              	.LVL29:
+ 427 0278 67800000 		ret
+ 428              	.LVL30:
+ 429              	.L39:
+  61:src/MemoryAllocator.cpp ****         if((uint64) cur + cur->size >= (uint64) ptr) return -2;
+ 430              		.loc 1 61 62
+ 431 027c 1305E0FF 		li	a0,-2
+GAS LISTING /tmp/ccqjrmgn.s 			page 12
+
+
+ 432              	.LVL31:
+  82:src/MemoryAllocator.cpp **** }
+ 433              		.loc 1 82 1
+ 434 0280 67800000 		ret
+ 435              		.cfi_endproc
+ 436              	.LFE1:
+ 438              		.globl	_ZN15MemoryAllocator5startE
+ 439              		.globl	_ZN15MemoryAllocator4headE
+ 440              		.data
+ 441              		.set	.LANCHOR0,. + 0
+ 444              	_ZN15MemoryAllocator5startE:
+ 445 0000 01       		.byte	1
+ 446              		.bss
+ 447              		.align	3
+ 448              		.set	.LANCHOR1,. + 0
+ 451              	_ZN15MemoryAllocator4headE:
+ 452 0000 00000000 		.zero	8
+ 452      00000000 
+ 453              		.text
+ 454              	.Letext0:
+ 455              		.file 2 "src/../h/../lib/hw.h"
+ 456              		.file 3 "src/../h/MemoryAllocator.h"
+GAS LISTING /tmp/ccqjrmgn.s 			page 13
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 MemoryAllocator.cpp
+     /tmp/ccqjrmgn.s:9      .text:0000000000000000 _ZN15MemoryAllocator9mem_allocEm
+     /tmp/ccqjrmgn.s:13     .text:0000000000000000 .L0 
+     /tmp/ccqjrmgn.s:15     .text:0000000000000000 .L0 
+     /tmp/ccqjrmgn.s:16     .text:0000000000000004 .L0 
+     /tmp/ccqjrmgn.s:18     .text:0000000000000008 .L0 
+     /tmp/ccqjrmgn.s:20     .text:000000000000000c .L0 
+     /tmp/ccqjrmgn.s:23     .text:0000000000000010 .L0 
+     /tmp/ccqjrmgn.s:26     .text:000000000000001c .L0 
+     /tmp/ccqjrmgn.s:27     .text:000000000000001c .L0 
+     /tmp/ccqjrmgn.s:32     .text:0000000000000034 .L0 
+     /tmp/ccqjrmgn.s:33     .text:0000000000000034 .L0 
+     /tmp/ccqjrmgn.s:35     .text:0000000000000038 .L0 
+     /tmp/ccqjrmgn.s:37     .text:000000000000003c .L0 
+     /tmp/ccqjrmgn.s:38     .text:000000000000003c .L0 
+     /tmp/ccqjrmgn.s:40     .text:0000000000000040 .L0 
+     /tmp/ccqjrmgn.s:45     .text:0000000000000054 .L0 
+     /tmp/ccqjrmgn.s:47     .text:0000000000000058 .L0 
+     /tmp/ccqjrmgn.s:48     .text:0000000000000058 .L0 
+     /tmp/ccqjrmgn.s:51     .text:0000000000000060 .L0 
+     /tmp/ccqjrmgn.s:52     .text:0000000000000060 .L0 
+     /tmp/ccqjrmgn.s:55     .text:0000000000000068 .L0 
+     /tmp/ccqjrmgn.s:58     .text:000000000000006c .L0 
+     /tmp/ccqjrmgn.s:59     .text:000000000000006c .L0 
+     /tmp/ccqjrmgn.s:60     .text:000000000000006c .L0 
+     /tmp/ccqjrmgn.s:63     .text:0000000000000070 .L0 
+     /tmp/ccqjrmgn.s:67     .text:0000000000000074 .L0 
+     /tmp/ccqjrmgn.s:68     .text:0000000000000074 .L0 
+     /tmp/ccqjrmgn.s:69     .text:0000000000000074 .L0 
+     /tmp/ccqjrmgn.s:71     .text:0000000000000078 .L0 
+     /tmp/ccqjrmgn.s:73     .text:000000000000007c .L0 
+     /tmp/ccqjrmgn.s:74     .text:000000000000007c .L0 
+     /tmp/ccqjrmgn.s:77     .text:0000000000000080 .L0 
+     /tmp/ccqjrmgn.s:82     .text:0000000000000088 .L0 
+     /tmp/ccqjrmgn.s:85     .text:000000000000008c .L0 
+     /tmp/ccqjrmgn.s:86     .text:000000000000008c .L0 
+     /tmp/ccqjrmgn.s:89     .text:0000000000000090 .L0 
+     /tmp/ccqjrmgn.s:90     .text:0000000000000090 .L0 
+     /tmp/ccqjrmgn.s:92     .text:0000000000000094 .L0 
+     /tmp/ccqjrmgn.s:94     .text:0000000000000098 .L0 
+     /tmp/ccqjrmgn.s:95     .text:0000000000000098 .L0 
+     /tmp/ccqjrmgn.s:97     .text:000000000000009c .L0 
+     /tmp/ccqjrmgn.s:98     .text:000000000000009c .L0 
+     /tmp/ccqjrmgn.s:100    .text:00000000000000a0 .L0 
+     /tmp/ccqjrmgn.s:102    .text:00000000000000a4 .L0 
+     /tmp/ccqjrmgn.s:104    .text:00000000000000a8 .L0 
+     /tmp/ccqjrmgn.s:105    .text:00000000000000a8 .L0 
+     /tmp/ccqjrmgn.s:108    .text:00000000000000ac .L0 
+     /tmp/ccqjrmgn.s:109    .text:00000000000000ac .L0 
+     /tmp/ccqjrmgn.s:115    .text:00000000000000b0 .L0 
+     /tmp/ccqjrmgn.s:116    .text:00000000000000b0 .L0 
+     /tmp/ccqjrmgn.s:118    .text:00000000000000b4 .L0 
+     /tmp/ccqjrmgn.s:120    .text:00000000000000b8 .L0 
+     /tmp/ccqjrmgn.s:121    .text:00000000000000b8 .L0 
+     /tmp/ccqjrmgn.s:123    .text:00000000000000bc .L0 
+     /tmp/ccqjrmgn.s:125    .text:00000000000000c0 .L0 
+GAS LISTING /tmp/ccqjrmgn.s 			page 14
+
+
+     /tmp/ccqjrmgn.s:126    .text:00000000000000c0 .L0 
+     /tmp/ccqjrmgn.s:128    .text:00000000000000c4 .L0 
+     /tmp/ccqjrmgn.s:131    .text:00000000000000c8 .L0 
+     /tmp/ccqjrmgn.s:132    .text:00000000000000c8 .L0 
+     /tmp/ccqjrmgn.s:134    .text:00000000000000cc .L0 
+     /tmp/ccqjrmgn.s:135    .text:00000000000000cc .L0 
+     /tmp/ccqjrmgn.s:137    .text:00000000000000d0 .L0 
+     /tmp/ccqjrmgn.s:139    .text:00000000000000d4 .L0 
+     /tmp/ccqjrmgn.s:140    .text:00000000000000d4 .L0 
+     /tmp/ccqjrmgn.s:144    .text:00000000000000d8 .L0 
+     /tmp/ccqjrmgn.s:145    .text:00000000000000dc .L0 
+     /tmp/ccqjrmgn.s:146    .text:00000000000000dc .L0 
+     /tmp/ccqjrmgn.s:147    .text:00000000000000dc .L0 
+     /tmp/ccqjrmgn.s:149    .text:00000000000000e0 .L0 
+     /tmp/ccqjrmgn.s:153    .text:00000000000000e4 .L0 
+     /tmp/ccqjrmgn.s:155    .text:00000000000000e4 .L0 
+     /tmp/ccqjrmgn.s:156    .text:00000000000000e4 .L0 
+     /tmp/ccqjrmgn.s:158    .text:00000000000000e8 .L0 
+     /tmp/ccqjrmgn.s:160    .text:00000000000000f0 .L0 
+     /tmp/ccqjrmgn.s:161    .text:00000000000000f0 .L0 
+     /tmp/ccqjrmgn.s:163    .text:00000000000000f8 .L0 
+     /tmp/ccqjrmgn.s:169    .text:00000000000000f8 _ZN15MemoryAllocator9tryToJoinEPNS_7FreeMemE
+     /tmp/ccqjrmgn.s:172    .text:00000000000000f8 .L0 
+     /tmp/ccqjrmgn.s:174    .text:00000000000000f8 .L0 
+     /tmp/ccqjrmgn.s:175    .text:00000000000000fc .L0 
+     /tmp/ccqjrmgn.s:177    .text:0000000000000100 .L0 
+     /tmp/ccqjrmgn.s:179    .text:0000000000000104 .L0 
+     /tmp/ccqjrmgn.s:181    .text:0000000000000104 .L0 
+     /tmp/ccqjrmgn.s:182    .text:0000000000000104 .L0 
+     /tmp/ccqjrmgn.s:184    .text:0000000000000108 .L0 
+     /tmp/ccqjrmgn.s:186    .text:000000000000010c .L0 
+     /tmp/ccqjrmgn.s:188    .text:0000000000000110 .L0 
+     /tmp/ccqjrmgn.s:190    .text:0000000000000114 .L0 
+     /tmp/ccqjrmgn.s:193    .text:0000000000000118 .L0 
+     /tmp/ccqjrmgn.s:194    .text:0000000000000118 .L0 
+     /tmp/ccqjrmgn.s:196    .text:000000000000011c .L0 
+     /tmp/ccqjrmgn.s:198    .text:0000000000000120 .L0 
+     /tmp/ccqjrmgn.s:200    .text:0000000000000124 .L0 
+     /tmp/ccqjrmgn.s:202    .text:0000000000000128 .L0 
+     /tmp/ccqjrmgn.s:205    .text:000000000000012c .L0 
+     /tmp/ccqjrmgn.s:206    .text:0000000000000130 .L0 
+     /tmp/ccqjrmgn.s:207    .text:0000000000000130 .L0 
+     /tmp/ccqjrmgn.s:208    .text:0000000000000130 .L0 
+     /tmp/ccqjrmgn.s:210    .text:0000000000000134 .L0 
+     /tmp/ccqjrmgn.s:213    .text:0000000000000138 .L0 
+     /tmp/ccqjrmgn.s:215    .text:0000000000000138 .L0 
+     /tmp/ccqjrmgn.s:216    .text:0000000000000138 .L0 
+     /tmp/ccqjrmgn.s:218    .text:000000000000013c .L0 
+     /tmp/ccqjrmgn.s:221    .text:0000000000000144 .L0 
+     /tmp/ccqjrmgn.s:222    .text:0000000000000144 .L0 
+     /tmp/ccqjrmgn.s:224    .text:0000000000000148 .L0 
+     /tmp/ccqjrmgn.s:226    .text:000000000000014c .L0 
+     /tmp/ccqjrmgn.s:228    .text:0000000000000150 .L0 
+     /tmp/ccqjrmgn.s:230    .text:0000000000000154 .L0 
+     /tmp/ccqjrmgn.s:231    .text:0000000000000154 .L0 
+     /tmp/ccqjrmgn.s:233    .text:0000000000000158 .L0 
+     /tmp/ccqjrmgn.s:236    .text:000000000000015c .L0 
+GAS LISTING /tmp/ccqjrmgn.s 			page 15
+
+
+     /tmp/ccqjrmgn.s:237    .text:000000000000015c .L0 
+     /tmp/ccqjrmgn.s:242    .text:0000000000000164 .L0 
+     /tmp/ccqjrmgn.s:243    .text:0000000000000164 .L0 
+     /tmp/ccqjrmgn.s:245    .text:0000000000000168 .L0 
+     /tmp/ccqjrmgn.s:248    .text:0000000000000170 .L0 
+     /tmp/ccqjrmgn.s:249    .text:0000000000000170 .L0 
+     /tmp/ccqjrmgn.s:251    .text:0000000000000174 .L0 
+     /tmp/ccqjrmgn.s:253    .text:0000000000000178 .L0 
+     /tmp/ccqjrmgn.s:255    .text:000000000000017c .L0 
+     /tmp/ccqjrmgn.s:256    .text:000000000000017c .L0 
+     /tmp/ccqjrmgn.s:258    .text:0000000000000180 .L0 
+     /tmp/ccqjrmgn.s:259    .text:0000000000000184 .L0 
+     /tmp/ccqjrmgn.s:265    .text:0000000000000184 _ZN15MemoryAllocator8mem_freeEPv
+     /tmp/ccqjrmgn.s:268    .text:0000000000000184 .L0 
+     /tmp/ccqjrmgn.s:270    .text:0000000000000184 .L0 
+     /tmp/ccqjrmgn.s:271    .text:0000000000000184 .L0 
+     /tmp/ccqjrmgn.s:275    .text:0000000000000194 .L0 
+     /tmp/ccqjrmgn.s:276    .text:0000000000000194 .L0 
+     /tmp/ccqjrmgn.s:279    .text:0000000000000198 .L0 
+     /tmp/ccqjrmgn.s:282    .text:000000000000019c .L0 
+     /tmp/ccqjrmgn.s:283    .text:000000000000019c .L0 
+     /tmp/ccqjrmgn.s:286    .text:00000000000001a8 .L0 
+     /tmp/ccqjrmgn.s:288    .text:00000000000001ac .L0 
+     /tmp/ccqjrmgn.s:291    .text:00000000000001b8 .L0 
+     /tmp/ccqjrmgn.s:294    .text:00000000000001bc .L0 
+     /tmp/ccqjrmgn.s:295    .text:00000000000001bc .L0 
+     /tmp/ccqjrmgn.s:296    .text:00000000000001bc .L0 
+     /tmp/ccqjrmgn.s:298    .text:00000000000001c4 .L0 
+     /tmp/ccqjrmgn.s:300    .text:00000000000001c8 .L0 
+     /tmp/ccqjrmgn.s:302    .text:00000000000001cc .L0 
+     /tmp/ccqjrmgn.s:306    .text:00000000000001d0 .L0 
+     /tmp/ccqjrmgn.s:308    .text:00000000000001d4 .L0 
+     /tmp/ccqjrmgn.s:311    .text:00000000000001d8 .L0 
+     /tmp/ccqjrmgn.s:313    .text:00000000000001dc .L0 
+     /tmp/ccqjrmgn.s:316    .text:00000000000001e0 .L0 
+     /tmp/ccqjrmgn.s:317    .text:00000000000001e0 .L0 
+     /tmp/ccqjrmgn.s:319    .text:00000000000001e4 .L0 
+     /tmp/ccqjrmgn.s:321    .text:00000000000001e8 .L0 
+     /tmp/ccqjrmgn.s:324    .text:00000000000001ec .L0 
+     /tmp/ccqjrmgn.s:325    .text:00000000000001ec .L0 
+     /tmp/ccqjrmgn.s:326    .text:00000000000001ec .L0 
+     /tmp/ccqjrmgn.s:328    .text:00000000000001f0 .L0 
+     /tmp/ccqjrmgn.s:330    .text:00000000000001f4 .L0 
+     /tmp/ccqjrmgn.s:331    .text:00000000000001f4 .L0 
+     /tmp/ccqjrmgn.s:333    .text:00000000000001f8 .L0 
+     /tmp/ccqjrmgn.s:338    .text:0000000000000200 .L0 
+     /tmp/ccqjrmgn.s:339    .text:0000000000000200 .L0 
+     /tmp/ccqjrmgn.s:340    .text:0000000000000200 .L0 
+     /tmp/ccqjrmgn.s:342    .text:0000000000000204 .L0 
+     /tmp/ccqjrmgn.s:343    .text:0000000000000204 .L0 
+     /tmp/ccqjrmgn.s:348    .text:000000000000020c .L0 
+     /tmp/ccqjrmgn.s:349    .text:000000000000020c .L0 
+     /tmp/ccqjrmgn.s:350    .text:000000000000020c .L0 
+     /tmp/ccqjrmgn.s:352    .text:0000000000000210 .L0 
+     /tmp/ccqjrmgn.s:353    .text:0000000000000210 .L0 
+     /tmp/ccqjrmgn.s:357    .text:0000000000000214 .L0 
+     /tmp/ccqjrmgn.s:358    .text:0000000000000214 .L0 
+GAS LISTING /tmp/ccqjrmgn.s 			page 16
+
+
+     /tmp/ccqjrmgn.s:361    .text:0000000000000218 .L0 
+     /tmp/ccqjrmgn.s:362    .text:000000000000021c .L0 
+     /tmp/ccqjrmgn.s:365    .text:0000000000000224 .L0 
+     /tmp/ccqjrmgn.s:366    .text:0000000000000224 .L0 
+     /tmp/ccqjrmgn.s:368    .text:0000000000000228 .L0 
+     /tmp/ccqjrmgn.s:370    .text:0000000000000228 .L0 
+     /tmp/ccqjrmgn.s:371    .text:0000000000000228 .L0 
+     /tmp/ccqjrmgn.s:373    .text:000000000000022c .L0 
+     /tmp/ccqjrmgn.s:375    .text:0000000000000230 .L0 
+     /tmp/ccqjrmgn.s:376    .text:0000000000000230 .L0 
+     /tmp/ccqjrmgn.s:379    .text:0000000000000234 .L0 
+     /tmp/ccqjrmgn.s:381    .text:0000000000000238 .L0 
+     /tmp/ccqjrmgn.s:382    .text:0000000000000238 .L0 
+     /tmp/ccqjrmgn.s:385    .text:000000000000023c .L0 
+     /tmp/ccqjrmgn.s:386    .text:000000000000023c .L0 
+     /tmp/ccqjrmgn.s:389    .text:0000000000000244 .L0 
+     /tmp/ccqjrmgn.s:390    .text:0000000000000244 .L0 
+     /tmp/ccqjrmgn.s:392    .text:0000000000000248 .L0 
+     /tmp/ccqjrmgn.s:393    .text:000000000000024c .L0 
+     /tmp/ccqjrmgn.s:394    .text:000000000000024c .L0 
+     /tmp/ccqjrmgn.s:396    .text:0000000000000250 .L0 
+     /tmp/ccqjrmgn.s:397    .text:0000000000000250 .L0 
+     /tmp/ccqjrmgn.s:399    .text:0000000000000254 .L0 
+     /tmp/ccqjrmgn.s:403    .text:0000000000000258 .L0 
+     /tmp/ccqjrmgn.s:405    .text:0000000000000258 .L0 
+     /tmp/ccqjrmgn.s:406    .text:0000000000000258 .L0 
+     /tmp/ccqjrmgn.s:410    .text:0000000000000264 .L0 
+     /tmp/ccqjrmgn.s:411    .text:0000000000000264 .L0 
+     /tmp/ccqjrmgn.s:412    .text:0000000000000264 .L0 
+     /tmp/ccqjrmgn.s:414    .text:0000000000000264 .L0 
+     /tmp/ccqjrmgn.s:420    .text:000000000000026c .L0 
+     /tmp/ccqjrmgn.s:431    .text:000000000000027c .L0 
+     /tmp/ccqjrmgn.s:434    .text:0000000000000280 .L0 
+     /tmp/ccqjrmgn.s:435    .text:0000000000000284 .L0 
+     /tmp/ccqjrmgn.s:444    .data:0000000000000000 _ZN15MemoryAllocator5startE
+     /tmp/ccqjrmgn.s:451    .bss:0000000000000000 _ZN15MemoryAllocator4headE
+     /tmp/ccqjrmgn.s:441    .data:0000000000000000 .LANCHOR0
+     /tmp/ccqjrmgn.s:448    .bss:0000000000000000 .LANCHOR1
+     /tmp/ccqjrmgn.s:457    .text:0000000000000284 .L0 
+     /tmp/ccqjrmgn.s:23     .text:0000000000000010 .L0 
+     /tmp/ccqjrmgn.s:27     .text:000000000000001c .L0 
+     /tmp/ccqjrmgn.s:29     .text:0000000000000028 .L0 
+     /tmp/ccqjrmgn.s:40     .text:0000000000000040 .L0 
+     /tmp/ccqjrmgn.s:48     .text:0000000000000058 .L0 
+     /tmp/ccqjrmgn.s:52     .text:0000000000000060 .L0 
+     /tmp/ccqjrmgn.s:158    .text:00000000000000e8 .L0 
+     /tmp/ccqjrmgn.s:271    .text:0000000000000184 .L0 
+     /tmp/ccqjrmgn.s:283    .text:000000000000019c .L0 
+     /tmp/ccqjrmgn.s:288    .text:00000000000001ac .L0 
+     /tmp/ccqjrmgn.s:296    .text:00000000000001bc .L0 
+     /tmp/ccqjrmgn.s:406    .text:0000000000000258 .L0 
+     /tmp/ccqjrmgn.s:49     .text:0000000000000060 .L2
+     /tmp/ccqjrmgn.s:142    .text:00000000000000d8 .L1
+     /tmp/ccqjrmgn.s:79     .text:0000000000000088 .L4
+     /tmp/ccqjrmgn.s:65     .text:0000000000000074 .L5
+     /tmp/ccqjrmgn.s:111    .text:00000000000000b0 .L6
+     /tmp/ccqjrmgn.s:106    .text:00000000000000ac .L7
+GAS LISTING /tmp/ccqjrmgn.s 			page 17
+
+
+     /tmp/ccqjrmgn.s:152    .text:00000000000000e4 .L11
+     /tmp/ccqjrmgn.s:129    .text:00000000000000c8 .L9
+     /tmp/ccqjrmgn.s:191    .text:0000000000000118 .L13
+     /tmp/ccqjrmgn.s:212    .text:0000000000000138 .L17
+     /tmp/ccqjrmgn.s:203    .text:000000000000012c .L12
+     /tmp/ccqjrmgn.s:240    .text:0000000000000164 .L18
+     /tmp/ccqjrmgn.s:234    .text:000000000000015c .L14
+     /tmp/ccqjrmgn.s:409    .text:0000000000000264 .L31
+     /tmp/ccqjrmgn.s:418    .text:000000000000026c .L32
+     /tmp/ccqjrmgn.s:424    .text:0000000000000274 .L33
+     /tmp/ccqjrmgn.s:336    .text:0000000000000200 .L21
+     /tmp/ccqjrmgn.s:346    .text:000000000000020c .L22
+     /tmp/ccqjrmgn.s:314    .text:00000000000001e0 .L23
+     /tmp/ccqjrmgn.s:304    .text:00000000000001d0 .L24
+     /tmp/ccqjrmgn.s:429    .text:000000000000027c .L39
+     /tmp/ccqjrmgn.s:355    .text:0000000000000214 .L26
+     /tmp/ccqjrmgn.s:359    .text:0000000000000218 .L27
+     /tmp/ccqjrmgn.s:377    .text:0000000000000234 .L28
+     /tmp/ccqjrmgn.s:402    .text:0000000000000258 .L29
+     /tmp/ccqjrmgn.s:383    .text:000000000000023c .L30
+     /tmp/ccqjrmgn.s:796    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+     /tmp/ccqjrmgn.s:1446   .debug_str:000000000000010c .LASF30
+     /tmp/ccqjrmgn.s:1464   .debug_str:0000000000000264 .LASF31
+     /tmp/ccqjrmgn.s:1466   .debug_str:000000000000027c .LASF32
+     /tmp/ccqjrmgn.s:5      .text:0000000000000000 .Ltext0
+     /tmp/ccqjrmgn.s:454    .text:0000000000000284 .Letext0
+     /tmp/ccqjrmgn.s:1408   .debug_line:0000000000000000 .Ldebug_line0
+     /tmp/ccqjrmgn.s:1452   .debug_str:00000000000001ee .LASF0
+     /tmp/ccqjrmgn.s:1442   .debug_str:00000000000000ed .LASF1
+     /tmp/ccqjrmgn.s:1436   .debug_str:00000000000000c5 .LASF2
+     /tmp/ccqjrmgn.s:1422   .debug_str:0000000000000058 .LASF4
+     /tmp/ccqjrmgn.s:1440   .debug_str:00000000000000db .LASF3
+     /tmp/ccqjrmgn.s:1414   .debug_str:0000000000000023 .LASF5
+     /tmp/ccqjrmgn.s:1410   .debug_str:0000000000000000 .LASF6
+     /tmp/ccqjrmgn.s:1430   .debug_str:0000000000000082 .LASF7
+     /tmp/ccqjrmgn.s:1458   .debug_str:0000000000000211 .LASF8
+     /tmp/ccqjrmgn.s:1420   .debug_str:000000000000004a .LASF9
+     /tmp/ccqjrmgn.s:1484   .debug_str:000000000000030e .LASF10
+     /tmp/ccqjrmgn.s:1432   .debug_str:0000000000000095 .LASF11
+     /tmp/ccqjrmgn.s:1476   .debug_str:00000000000002ea .LASF12
+     /tmp/ccqjrmgn.s:1456   .debug_str:0000000000000201 .LASF13
+     /tmp/ccqjrmgn.s:1444   .debug_str:0000000000000100 .LASF14
+     /tmp/ccqjrmgn.s:1426   .debug_str:0000000000000064 .LASF15
+     /tmp/ccqjrmgn.s:1462   .debug_str:000000000000024e .LASF16
+     /tmp/ccqjrmgn.s:1412   .debug_str:0000000000000013 .LASF33
+     /tmp/ccqjrmgn.s:1438   .debug_str:00000000000000d3 .LASF34
+     /tmp/ccqjrmgn.s:1416   .debug_str:000000000000002a .LASF17
+     /tmp/ccqjrmgn.s:1482   .debug_str:0000000000000309 .LASF18
+     /tmp/ccqjrmgn.s:1480   .debug_str:0000000000000304 .LASF19
+     /tmp/ccqjrmgn.s:1448   .debug_str:00000000000001d0 .LASF35
+     /tmp/ccqjrmgn.s:1478   .debug_str:00000000000002fa .LASF20
+     /tmp/ccqjrmgn.s:1470   .debug_str:00000000000002a3 .LASF22
+     /tmp/ccqjrmgn.s:1468   .debug_str:000000000000029a .LASF21
+     /tmp/ccqjrmgn.s:1434   .debug_str:00000000000000a4 .LASF23
+     /tmp/ccqjrmgn.s:1474   .debug_str:00000000000002e0 .LASF36
+     /tmp/ccqjrmgn.s:1460   .debug_str:0000000000000221 .LASF37
+     /tmp/ccqjrmgn.s:1450   .debug_str:00000000000001e9 .LASF24
+GAS LISTING /tmp/ccqjrmgn.s 			page 18
+
+
+     /tmp/ccqjrmgn.s:1454   .debug_str:00000000000001fb .LASF25
+     /tmp/ccqjrmgn.s:1424   .debug_str:000000000000005f .LASF26
+     /tmp/ccqjrmgn.s:1418   .debug_str:000000000000002f .LASF27
+     /tmp/ccqjrmgn.s:1472   .debug_str:00000000000002c4 .LASF28
+     /tmp/ccqjrmgn.s:170    .text:00000000000000f8 .LFB2
+     /tmp/ccqjrmgn.s:260    .text:0000000000000184 .LFE2
+     /tmp/ccqjrmgn.s:1241   .debug_loc:0000000000000000 .LLST3
+     /tmp/ccqjrmgn.s:266    .text:0000000000000184 .LFB1
+     /tmp/ccqjrmgn.s:436    .text:0000000000000284 .LFE1
+     /tmp/ccqjrmgn.s:1252   .debug_loc:0000000000000036 .LLST4
+     /tmp/ccqjrmgn.s:1311   .debug_loc:0000000000000132 .LLST5
+     /tmp/ccqjrmgn.s:1428   .debug_str:000000000000007a .LASF29
+     /tmp/ccqjrmgn.s:1336   .debug_loc:00000000000001a3 .LLST6
+     /tmp/ccqjrmgn.s:387    .text:0000000000000244 .LVL22
+     /tmp/ccqjrmgn.s:10     .text:0000000000000000 .LFB0
+     /tmp/ccqjrmgn.s:164    .text:00000000000000f8 .LFE0
+     /tmp/ccqjrmgn.s:1356   .debug_loc:00000000000001f1 .LLST0
+     /tmp/ccqjrmgn.s:1377   .debug_loc:0000000000000250 .LLST1
+     /tmp/ccqjrmgn.s:83     .text:000000000000008c .LBB3
+     /tmp/ccqjrmgn.s:112    .text:00000000000000b0 .LBE3
+     /tmp/ccqjrmgn.s:1388   .debug_loc:0000000000000286 .LLST2
+     /tmp/ccqjrmgn.s:173    .text:00000000000000f8 .LVL10
+     /tmp/ccqjrmgn.s:238    .text:0000000000000160 .LVL11
+     /tmp/ccqjrmgn.s:269    .text:0000000000000184 .LVL12
+     /tmp/ccqjrmgn.s:277    .text:0000000000000198 .LVL13
+     /tmp/ccqjrmgn.s:280    .text:000000000000019c .LVL14
+     /tmp/ccqjrmgn.s:401    .text:0000000000000258 .LVL23
+     /tmp/ccqjrmgn.s:415    .text:0000000000000268 .LVL25
+     /tmp/ccqjrmgn.s:417    .text:000000000000026c .LVL26
+     /tmp/ccqjrmgn.s:421    .text:0000000000000270 .LVL27
+     /tmp/ccqjrmgn.s:423    .text:0000000000000274 .LVL28
+     /tmp/ccqjrmgn.s:426    .text:0000000000000278 .LVL29
+     /tmp/ccqjrmgn.s:428    .text:000000000000027c .LVL30
+     /tmp/ccqjrmgn.s:432    .text:0000000000000280 .LVL31
+     /tmp/ccqjrmgn.s:293    .text:00000000000001bc .LVL15
+     /tmp/ccqjrmgn.s:303    .text:00000000000001d0 .LVL16
+     /tmp/ccqjrmgn.s:309    .text:00000000000001d8 .LVL17
+     /tmp/ccqjrmgn.s:335    .text:0000000000000200 .LVL19
+     /tmp/ccqjrmgn.s:354    .text:0000000000000214 .LVL21
+     /tmp/ccqjrmgn.s:323    .text:00000000000001ec .LVL18
+     /tmp/ccqjrmgn.s:408    .text:0000000000000264 .LVL24
+     /tmp/ccqjrmgn.s:14     .text:0000000000000000 .LVL0
+     /tmp/ccqjrmgn.s:53     .text:0000000000000068 .LVL1
+     /tmp/ccqjrmgn.s:61     .text:0000000000000070 .LVL3
+     /tmp/ccqjrmgn.s:64     .text:0000000000000074 .LVL4
+     /tmp/ccqjrmgn.s:57     .text:000000000000006c .LVL2
+     /tmp/ccqjrmgn.s:141    .text:00000000000000d8 .LVL8
+     /tmp/ccqjrmgn.s:151    .text:00000000000000e4 .LVL9
+     /tmp/ccqjrmgn.s:87     .text:0000000000000090 .LVL6
+     /tmp/ccqjrmgn.s:110    .text:00000000000000b0 .LVL7
+     /tmp/ccqjrmgn.s:458    .debug_info:0000000000000000 .Ldebug_info0
+
+UNDEFINED SYMBOLS
+HEAP_START_ADDR
+HEAP_END_ADDR
